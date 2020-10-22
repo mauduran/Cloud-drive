@@ -1,0 +1,27 @@
+{
+  "name": "cloud-drive",
+  "version": "1.0.0",
+  "description": "Web App that works as cloud file manager",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mauduran/Cloud-drive.git"
+  },
+  "keywords": [
+    "cloud",
+    "node",
+    "http",
+    "express",
+    "fs",
+    "mongodb"
+  ],
+  "author": "Mauricio Duran, Anahi Santana, Edgar Medina",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mauduran/Cloud-drive/issues"
+  },
+  "homepage": "https://github.com/mauduran/Cloud-drive#readme"
+}
