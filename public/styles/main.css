@@ -1,0 +1,293 @@
+.grid {
+  width: 100%;
+  margin-bottom: 20px;
+}
+.grid > div {
+  width: 100%;
+  float: left;
+  box-sizing: border-box;
+}
+.grid:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+@media screen and (min-width: 0px) {
+  .grid > .xs-10 {
+    width: 10%;
+  }
+  .grid > .xs-25 {
+    width: 25%;
+  }
+  .grid > .xs-33 {
+    width: 33%;
+  }
+  .grid > .xs-50 {
+    width: 50%;
+  }
+  .grid > .xs-67 {
+    width: 67%;
+  }
+  .grid > .xs-75 {
+    width: 75%;
+  }
+  .grid > .xs-90 {
+    width: 90%;
+  }
+  .grid > .xs-100 {
+    width: 100%;
+  }
+  .grid > div.not-in-xs {
+    display: none;
+  }
+  .grid > div.in-xs {
+    display: inherit;
+  }
+}
+@media screen and (min-width: 600px) {
+  .grid > .sm-10 {
+    width: 10%;
+  }
+  .grid > .sm-25 {
+    width: 25%;
+  }
+  .grid > .sm-33 {
+    width: 33%;
+  }
+  .grid > .sm-50 {
+    width: 50%;
+  }
+  .grid > .sm-67 {
+    width: 67%;
+  }
+  .grid > .sm-75 {
+    width: 75%;
+  }
+  .grid > .sm-90 {
+    width: 90%;
+  }
+  .grid > .sm-100 {
+    width: 100%;
+  }
+  .grid > div.not-in-sm {
+    display: none;
+  }
+  .grid > div.in-sm {
+    display: inherit;
+  }
+}
+@media screen and (min-width: 800px) {
+  .grid > .md-10 {
+    width: 10%;
+  }
+  .grid > .md-25 {
+    width: 25%;
+  }
+  .grid > .md-33 {
+    width: 33%;
+  }
+  .grid > .md-50 {
+    width: 50%;
+  }
+  .grid > .md-67 {
+    width: 67%;
+  }
+  .grid > .md-75 {
+    width: 75%;
+  }
+  .grid > .md-90 {
+    width: 90%;
+  }
+  .grid > .md-100 {
+    width: 100%;
+  }
+  .grid > div.not-in-md {
+    display: none;
+  }
+  .grid > div.in-md {
+    display: inherit;
+  }
+}
+@media screen and (min-width: 1024px) {
+  .grid > .lg-10 {
+    width: 10%;
+  }
+  .grid > .lg-25 {
+    width: 25%;
+  }
+  .grid > .lg-33 {
+    width: 33%;
+  }
+  .grid > .lg-50 {
+    width: 50%;
+  }
+  .grid > .lg-67 {
+    width: 67%;
+  }
+  .grid > .lg-75 {
+    width: 75%;
+  }
+  .grid > .lg-90 {
+    width: 90%;
+  }
+  .grid > .lg-100 {
+    width: 100%;
+  }
+  .grid > div.not-in-lg {
+    display: none;
+  }
+  .grid > div.in-lg {
+    display: inherit;
+  }
+}
+@media screen and (min-width: 1280px) {
+  .grid > .xl-10 {
+    width: 10%;
+  }
+  .grid > .xl-25 {
+    width: 25%;
+  }
+  .grid > .xl-33 {
+    width: 33%;
+  }
+  .grid > .xl-50 {
+    width: 50%;
+  }
+  .grid > .xl-67 {
+    width: 67%;
+  }
+  .grid > .xl-75 {
+    width: 75%;
+  }
+  .grid > .xl-90 {
+    width: 90%;
+  }
+  .grid > .xl-100 {
+    width: 100%;
+  }
+  .grid > div.not-in-xl {
+    display: none;
+  }
+  .grid > div.in-xl {
+    display: inherit;
+  }
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+  background-color: #fff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.heading {
+  width: 100%;
+  margin-top: 0;
+  padding: 2% 5%;
+  height: 350;
+  background-color: #ddd;
+}
+
+.endpoint-info {
+  width: 100%;
+  margin-top: 0;
+  padding: 2% 5%;
+  height: 80%;
+}
+
+h1 {
+  margin: 0;
+  font-size: 48px;
+}
+
+h2 {
+  font-size: 36px;
+}
+
+h3 {
+  font-size: 32px;
+}
+
+h4 {
+  font-size: 28px;
+}
+
+.dbStatus {
+  display: flex;
+  width: 300px;
+  align-items: center;
+  justify-content: left;
+  font-size: 18px;
+}
+.dbStatus .dbStatusIndicator {
+  height: 15px;
+  width: 15px;
+  margin: 0 5px;
+  border-radius: 100%;
+}
+.dbStatus .dbStatusIndicator.connected {
+  background-color: lightgreen;
+}
+.dbStatus .dbStatusIndicator.connecting {
+  background-color: blue;
+}
+.dbStatus .dbStatusIndicator.disconnecting {
+  background-color: orange;
+}
+.dbStatus .dbStatusIndicator.disconnected {
+  background-color: red;
+}
+
+#navbar {
+  width: 100vw;
+  background-color: #383838;
+  height: 40px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+#navbar p {
+  height: fit-content;
+  margin: 0;
+  padding: 0;
+  color: #ddd;
+}
+#navbar #nav-title {
+  color: #ddd;
+  width: max-content;
+  font-size: 24px;
+  font-weight: 400;
+  flex-grow: 0;
+  padding: 0 2%;
+}
+#navbar ul {
+  list-style: none;
+  display: flex;
+  align-content: center;
+  color: #ddd;
+  width: max-content;
+  margin-left: auto;
+  margin-right: 40px;
+  margin-top: 0;
+  margin-bottom: 0;
+  height: 100%;
+}
+#navbar ul li {
+  text-decoration: none;
+  list-style: none;
+  color: #ddd;
+  background-color: #383838;
+  height: 40px;
+  padding: 0 10px;
+  display: flex;
+  align-items: center;
+}
+#navbar ul li.selected, #navbar ul li:hover {
+  background-color: #121212;
+  color: white;
+}

@@ -1,0 +1,128 @@
+@import "partials/_breakpoints";
+@import "partials/grid";
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+    background-color: #fff;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+.heading {
+    width: 100%;
+    margin-top: 0;
+    padding: 2% 5%;
+    height: 350;
+    background-color: #ddd;
+}
+
+.endpoint-info {
+    width: 100%;
+    margin-top: 0;
+    padding: 2% 5%;
+    height: 80%;
+}
+
+h1 {
+    margin: 0;
+    font-size: 48px;
+}
+
+h2 {
+    font-size: 36px;
+}
+
+h3 {
+    font-size: 32px;
+}
+
+h4 {
+    font-size: 28px;
+}
+.dbStatus {
+    display: flex;
+    width: 300px;
+    align-items: center;
+    justify-content: left;
+    font-size: 18px;
+
+    & .dbStatusIndicator {
+        height: 15px;
+        width: 15px;
+        margin: 0 5px;
+        border-radius: 100%;
+
+        &.connected {
+            background-color: lightgreen;
+        }
+
+        &.connecting {
+            background-color: blue;
+        }
+
+        &.disconnecting {
+            background-color: orange;
+        }
+
+        &.disconnected {
+            background-color: red;
+        }
+    }
+}
+#navbar {
+    width: 100vw;
+    background-color: #383838;
+    height: 40px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+
+    & p {
+        height: fit-content;
+        margin: 0;
+        padding: 0;
+        color: #ddd;
+    }
+
+    & #nav-title {
+        color: #ddd;
+        width: max-content;
+        font-size: 24px;
+        font-weight: 400;
+        flex-grow: 0;
+        padding: 0 2%;
+    }
+    & ul {
+        list-style: none;
+        display: flex;
+        align-content: center;
+        color: #ddd;
+        width: max-content;
+        margin-left: auto;
+        margin-right: 40px;
+        margin-top: 0;
+        margin-bottom: 0;
+        height: 100%;
+        & li {
+            text-decoration: none;
+            list-style: none;
+            color: #ddd;
+            background-color: #383838;
+            height: 40px;
+            padding: 0 10px;
+            display: flex;
+            align-items: center;
+
+            &.selected,
+            &:hover {
+                background-color: #121212;
+                color: white;
+            }
+        }
+    }
+}

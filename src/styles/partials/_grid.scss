@@ -1,0 +1,45 @@
+$sizes: 10, 25, 33, 50, 67, 75, 90, 100;
+
+@mixin clearfix($contenido:"") {
+    content: $contenido;
+    display: table;
+    clear: both;
+}
+
+@function getWidth($width) {
+    $perc: $width * 1%;
+    @return $perc;
+}
+
+@mixin breakpoint($width, $classname) {
+    @media screen and (min-width: $width) {
+        @each $size in $sizes {
+            > .#{$classname}-#{$size} { width: getWidth($size); }
+        }
+        
+
+        > div.not-in-#{$classname} { display: none; }
+        > div.in-#{$classname} { display: inherit; }
+    }
+}
+
+.grid {
+    width: 100%;
+    margin-bottom: 20px;
+
+    & > div {
+        width: 100%;
+        float: left;
+        box-sizing: border-box;
+    }
+    
+    &:after {
+        @include clearfix();
+    }
+
+    @include breakpoint($bp-xsmall,'xs');
+    @include breakpoint($bp-small,'sm');
+    @include breakpoint($bp-med,'md');
+    @include breakpoint($bp-large,'lg');
+    @include breakpoint($bp-xlarge,'xl');
+}
