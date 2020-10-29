@@ -1,0 +1,21 @@
+####
+
+POST http://localhost:3000/api/files
+Content-Type: application/json
+
+{
+    "path": "/home/docs/",
+    "fileName": "test.txt",
+    "owner": "5f9a33f497a9b71dd3b411d6"
+}
+
+###
+
+GET http://localhost:3000/api/files/hola
+Content-Type: application/json
+
+{
+    "path": "/home/docs/",
+    "fileName": "test.txt",
+    "owner": "5f9a33f497a9b71dd3b411d6"
+}

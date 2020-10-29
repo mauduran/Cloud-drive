@@ -9,6 +9,7 @@ const swaggerUI = require('swagger-ui-express');
 const swaggerDocs = require('./config/swagger.config');
 
 const userRouter = require('./src/routes/user.route');
+const fileRouter = require('./src/routes/files.route');
 
 require('dotenv').config();
 
@@ -33,7 +34,9 @@ app.use('/assets', express.static(path.join(__dirname, 'public')));
 app.use('/api/docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs));
 
 
-app.use('api/users', userRouter);
+app.use('/api/users', userRouter);
+
+app.use('/api/files', fileRouter);
 
 
 app.listen(PORT, ()=>{

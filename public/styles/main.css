@@ -232,6 +232,7 @@ h4 {
 }
 .dbStatus .dbStatusIndicator.connected {
   background-color: lightgreen;
+  border: 1px solid #383838;
 }
 .dbStatus .dbStatusIndicator.connecting {
   background-color: blue;
