@@ -12,7 +12,7 @@ let FilePermission = mongoose.Schema({
     },
     permission:{
         type: String,
-        enum: Object.values(PERMISSION_TYPES)
+        // enum: Object.values(PERMISSION_TYPES)
     } 
 })
 

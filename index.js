@@ -10,6 +10,7 @@ const swaggerDocs = require('./config/swagger.config');
 
 const userRouter = require('./src/routes/user.route');
 const fileRouter = require('./src/routes/files.route');
+const filePermissionsRouter = require('./src/routes/filePermissions.route');
 
 require('dotenv').config();
 
@@ -37,6 +38,9 @@ app.use('/api/docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs));
 app.use('/api/users', userRouter);
 
 app.use('/api/files', fileRouter);
+
+
+app.use('/api/filePermissions', fileRouter);
 
 
 app.listen(PORT, ()=>{

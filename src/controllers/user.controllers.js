@@ -74,15 +74,22 @@ let getUser = function(req, res) {
         }) 
 }
 
+
 let updateUser = function(req, res) {
     let {name, email, imageUrl} = req.body;
 
-    if(!name || !email || !imageUrl) return res.status(400).json({error: true, message: "Missing required fields"});
+    if(!email) return res.status(400).json({error: true, message: "Missing required fields"});
+
+    let changes = {}
+
+    if(name) changes.name = name;
+    if(imageUrl) changes.imageUrl = imageUrl;
+
     
     UserSchema.findOne({email})
     .then(user => {
         if(user) {
-            UserSchema.findOneAndUpdate({email : user.email}, {imageUrl : imageUrl}, function(req, res) {});
+            UserSchema.findOneAndUpdate({email : user.email}, changes, function(req, res) {});
             res.status(200).send({message: 'Image updated!'});
         } else {
             res.status(200).json({message: 'User not found!'});
