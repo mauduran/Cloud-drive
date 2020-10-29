@@ -1,5 +1,6 @@
 const express = require('express');
-const userController = require('../controllers/user.controller');
+const userControllers = require('../controllers/user.controllers');
+const userController = require('../controllers/user.controllers');
 
 const router = express.Router();
 
@@ -28,6 +29,8 @@ const router = express.Router();
 router.route('/')
     .get(userController.getUsers);
 
+router.route('/getUser')
+    .get(userController.getUser);
 
 /**
  * @swagger
@@ -65,8 +68,8 @@ router.route('/')
  *          description: Unexpected error
  */
 
-router.route('/login')
-    .post(userController.login)
+//router.route('/login')
+   // .post(userController.login)
 
 /**
  * @swagger
@@ -106,6 +109,7 @@ router.route('/login')
  *      "500":
  *          description: Unexpected error
  */
+
 router.route('/register')
     .post(userController.createUser);
 
@@ -143,9 +147,10 @@ router.route('/register')
  *      "404": 
  *        description: Not found
  */
+/*
 router.route('/update/password')
     .put(userController.changePassword);
-
+*/
 
 /**
  * @swagger
@@ -208,10 +213,20 @@ router.route('/update/password')
  *      "404": 
  *        description: Could not find user by that id
  */
+
+/*
 router.route('/:id')
     .get(userController.getUser)
     .put(userController.updateUser)
     .delete(userController.deleteUser);
+*/
 
+
+router.route('/update')
+    .post(userController.updateUser);
+
+router.route('/delete')
+    .delete(userControllers.deleteUser);
+    
 module.exports = router;
 

@@ -1,0 +1,53 @@
+### POST ###
+
+POST http://localhost:3000/api/users/register
+Content-Type: application/json
+
+{
+    "name": "anani",
+    "email": "anani@pandy.com"
+}
+
+###
+
+POST http://localhost:3000/api/users/register
+Content-Type: application/json
+
+{
+    "name": "panchito",
+    "email": "rolate@ladeeliminar.com"
+}
+
+### GET ###
+
+GET http://localhost:3000/api/users/getUser
+Content-Type: application/json
+
+{
+    "name": "anani",
+    "email": "ananii@pandy.com"
+}
+
+###
+GET http://localhost:3000/api/users/
+Content-Type: application/json
+
+
+### UPDATE ###
+POST http://localhost:3000/api/users/update
+Content-Type: application/json
+
+{
+    "name": "anani",
+    "email": "anani@pandy.com",
+    "imageUrl" : "loquesea"
+}
+
+### DELETE ###
+
+DELETE  http://localhost:3000/api/users/delete
+Content-Type: application/json
+
+{
+    "email": "rolate@ladeeliminar.com"
+}
