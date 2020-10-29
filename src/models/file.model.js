@@ -11,7 +11,7 @@ let fileSchema = mongoose.Schema({
     },
     fileName: {
         type: String,
-        required: true
+        default: ''
     },
     storageId: {
         type: String,
