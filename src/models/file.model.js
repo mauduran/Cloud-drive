@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const FileLogSchema = require('./fileLog.model.js');
 
-const fileUtils = require('../utils/file.utils');
+const fileConstants = require('../constants/file.constants');
 
 let fileSchema = mongoose.Schema({
     path: {
@@ -23,8 +23,8 @@ let fileSchema = mongoose.Schema({
     },
     status: {
         type: String,
-        enum: Object.values(fileUtils.STATUS_TYPES),
-        default: fileUtils.STATUS_TYPES.ACTIVE
+        enum: Object.values(fileConstants.STATUS_TYPES),
+        default: fileConstants.STATUS_TYPES.ACTIVE
 
     },
     requiresVerification: {
@@ -33,7 +33,7 @@ let fileSchema = mongoose.Schema({
     },
     verificationStatus: {
         type: String,
-        enum: Object.values(fileUtils.VERIFICATION_STATUS_TYPES),
+        enum: Object.values(fileConstants.VERIFICATION_STATUS_TYPES),
         default: "not available"
     },
     owner: {

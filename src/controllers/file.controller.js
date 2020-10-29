@@ -1,5 +1,5 @@
-const mongoose = require('../../config/db-connection');
 const FileSchema = require('../models/file.model');
+const fileUtils = require('../utils/file.utils');
 
 const createFile = async (req, res) => {
     const {path, fileName, owner} = req.body;
@@ -21,7 +21,7 @@ const createFile = async (req, res) => {
     try {
         let FileDocument = FileSchema(newFile);
     
-        const file = await findFile(path, fileName, owner);
+        const file = await fileUtils.findFile(path, fileName, owner);
 
         if(file) {
             return res.status(409).json({error: true, message: "Trying to create file that already exists."});
@@ -47,7 +47,7 @@ const getFiles = async (req, res) => {
     if(!owner) res.status(401).json({error: true, message:"Must provide userId"});
 
     try {
-        const files = await findFiles(owner, path);
+        const files = await fileUtils.findFiles(owner, path);
         return res.json(files);
     } catch (error) {
         console.log(error)
@@ -58,26 +58,6 @@ const getFiles = async (req, res) => {
 
 
 
-//This should go on utils.
-
-const findFiles = async (owner, path) => {
-    try {
-        const files = await FileSchema.find({owner, path});
-        return Promise.resolve(files);
-    } catch (error) {
-        return Promise.reject(error);
-    }
-}
-
-const findFile = async (path, fileName, owner) =>{
-    try {
-        const files = await FileSchema.find({path, fileName, owner});
-        if(file) return Promise.resolve(files);
-        return Promise.resolve(null);
-    } catch (error) {
-        return Promise.reject(error);
-    }
-}
 
 module.exports = {
     createFile,

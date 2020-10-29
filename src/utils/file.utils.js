@@ -1,16 +1,26 @@
-const STATUS_TYPES = {
-    ACTIVE: "Active",
-    INACTIVE: "Inactive",
+const FileSchema = require('../models/file.model');
+
+const findFiles = async (owner, path) => {
+    try {
+        const files = await FileSchema.find({owner, path});
+        return Promise.resolve(files);
+    } catch (error) {
+        return Promise.reject(error);
+    }
 }
 
-const VERIFICATION_STATUS_TYPES =  {
-    PENDING: "pending",
-    VERIFIED: "verified",
-    REJECTED: "rejected",
-    NOT_AVAILABLE: "not available"
+const findFile = async (path, fileName, owner) =>{
+    try {
+        const files = await FileSchema.find({path, fileName, owner});
+        if(file) return Promise.resolve(files);
+        return Promise.resolve(null);
+    } catch (error) {
+        return Promise.reject(error);
+    }
 }
+
 
 module.exports = {
-    STATUS_TYPES,
-    VERIFICATION_STATUS_TYPES
+    findFiles,
+    findFile
 }
