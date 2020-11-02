@@ -1,5 +1,6 @@
 const express = require('express');
-const filePermissionController = require('../controllers/filePermissionController');
+const filePermissionController = require('../controllers/filePermission.controller');
+
 
 const router = express.Router();
 
@@ -9,8 +10,8 @@ router.route('/')
 
 router.route('/:id')
     .get(filePermissionController.getFilePermissions)
-    .update(filePermissionController.updateFilePermissions)
+    .put(filePermissionController.updateFilePermissions)
     .delete(filePermissionController.deleteFilePermission);
-    
+
 module.exports = router;
 

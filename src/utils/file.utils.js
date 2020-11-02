@@ -44,12 +44,12 @@ const findFile = async (path, fileName, owner) =>{
 }
 
 
-const createDirectory = async (path, owner) => {
+const createDirectory = async (path, owner, directoryName) => {
     try {
         
         let newDir = {
             path,
-            fileName: '',
+            fileName: directoryName,
             isDirectory: true,
             owner,
             accessedBy: [],
@@ -71,8 +71,11 @@ const createDirectory = async (path, owner) => {
 
 const existsDirectory = async (path, owner) => {
     try {
-        
-        const directory = await FileSchema.find({path, owner, isDirectory: true, status: fileConstants.STATUS_TYPES.ACTIVE});
+        let splitIndex = path.lastIndexOf('/');
+        let prevPath = path.substring(0, splitIndex);
+        let dirname = path.substring(splitIndex+1);
+        if(!prevPath) prevPath = '/';
+        const directory = await FileSchema.find({path: prevPath, fileName: dirname, owner, isDirectory: true, status: fileConstants.STATUS_TYPES.ACTIVE});
         if(directory.length) return Promise.resolve(true)
         return Promise.resolve(false);
     } catch (error) {

@@ -2,7 +2,6 @@ const fileUtils = require('../utils/file.utils');
 
 const createFile = async (req, res) => {
     let {path, fileName, owner} = req.body;
-    //Middleware?
     if(!path) path = '/';
 
     if(!fileName || !owner) return res.status(400).json({error: true, message: "Missing required fields"});
@@ -38,21 +37,22 @@ const createDirectory = async (req, res) => {
     if(path[0]!="/") path = '/' + path;
 
     if(!directoryName || !owner) return res.status(400).json({error: true, message: "Missing required fields"});
-
     
     try {
-        let existsDir = await fileUtils.existsDirectory(path, owner);
-    
-        if(path!='/' && !existsDir) return res.status(409).json({error: true, message: "Path does not exist"});
-    
-        if(path[path.length-1]!="/") path += '/';
-        path = path + directoryName;
-    
-        existsDir = await fileUtils.existsDirectory(path, owner);
-    
-        if(existsDir) return res.status(409).json({error: true, message: "Directory already exists"});
         
-        const dirCreated = await fileUtils.createDirectory(path, owner)
+        if(path!='/') {
+            let existsDir = await fileUtils.existsDirectory(path, owner);
+            
+            if(!existsDir) return res.status(409).json({error: true, message: "Path does not exist"});
+        }
+
+        let newPath = path + "/" + directoryName;
+    
+        let existsNewDir = await fileUtils.existsDirectory(newPath, owner);
+    
+        if(existsNewDir) return res.status(409).json({error: true, message: "Directory already exists"});
+        
+        const dirCreated = await fileUtils.createDirectory(path, owner, directoryName);
         if(dirCreated) return res.json("Directory successully created");
         return res.status(400).json({error:true, message: "Unexpected error"});
     } catch (error) {
@@ -63,18 +63,15 @@ const createDirectory = async (req, res) => {
 
 const getFiles = async (req, res) => {
     let {owner} = req.body;
-
-    let path;
+    let path = req.params.path;
 
     if(!req.params.path) path = '/';
-    else path = req.params.path;
 
     if(path[0]!='/') path = '/'+path;
 
     path = path.replace('-', '/');
-
     
-//   auth Middleware
+    //   auth Middleware
     if(!owner) res.status(401).json({error: true, message:"Must provide userId"});
 
     try {
@@ -124,15 +121,14 @@ const updateFile = async (req, res) => {
 
     if(!fileName || !owner) return res.status(400).json({error: true, message: "Missing required fields"});
 
-    
-    //s3uploadFile()
-    
     try {
-        const existsDirectory = await fileUtils.existsDirectory(path, owner);
-    
-        if(path!="/" && !existsDirectory) return res.status(400).json({error: true, message: "Path does not exist."})
 
-        
+        if(path!="/") {
+            const existsDirectory = await fileUtils.existsDirectory(path, owner);
+            if(!existsDirectory) return res.status(400).json({error: true, message: "Path does not exist."})
+
+        }
+    
         const file = await fileUtils.findFile(path, fileName, owner);
 
         if(file.length) {

@@ -25,7 +25,7 @@ const deleteFilePermission = async (req, res) => {
     }
 }
 
-const getFilePermissions = (req, res) => {
+const getFilePermissions = async (req, res) => {
     const {id} = req.params;
     if(!id) return res.status(400).json({ error: true, message: "missing fields" });
     try {
@@ -36,7 +36,7 @@ const getFilePermissions = (req, res) => {
     }
 }
 
-const updateFilePermissions = (req, res) => {
+const updateFilePermissions = async (req, res) => {
     const {id} = req.params;
     const {permission} = req.body;
 
