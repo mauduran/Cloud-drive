@@ -7,25 +7,28 @@ let userSchema = mongoose.Schema({
     },
     email: {
         type:String,
-        required: true
+        required: true,
+        unique: true
     },
     joined: {
         type:Date,
         default: Date.now
     },
     imageUrl : {
-        type : String,  
+        type : String  
     },
     lastConnection: {
         type:Date,
         default: Date.now
     },
-    multifactorSecret : {
-        type: String,
-        default : "None"
-    },
     sharedWithMe : {
         type: Array
+    },
+    hash:{
+        type: String
+    },
+    googleId:{
+        type: String
     }
 })
 
