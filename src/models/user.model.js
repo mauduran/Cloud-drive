@@ -12,10 +12,11 @@ let userSchema = mongoose.Schema({
     },
     joined: {
         type:Date,
-        default: Date.now
+        default: Date.now   
     },
     imageUrl : {
-        type : String  
+        type : String,
+        default: "assets/img/default-profile-pic"
     },
     lastConnection: {
         type:Date,

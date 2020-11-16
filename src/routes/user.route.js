@@ -1,6 +1,8 @@
 const express = require('express');
-const userControllers = require('../controllers/user.controllers');
-const userController = require('../controllers/user.controllers');
+const userController = require('../controllers/user.controller');
+const authMiddleware = require("../middlewares/auth.middleware");
+
+
 
 const router = express.Router();
 
@@ -29,8 +31,13 @@ const router = express.Router();
 router.route('/')
     .get(userController.getUsers);
 
-router.route('/getUser')
-    .get(userController.getUser);
+router.route("/test")
+    .get(authMiddleware, (req, res)=> {
+        console.log(req)
+        res.json("al cien")
+    })
+// router.route('/getUser')
+//     .get(userController.getUser);
 
 /**
  * @swagger
@@ -68,8 +75,8 @@ router.route('/getUser')
  *          description: Unexpected error
  */
 
-//router.route('/login')
-   // .post(userController.login)
+router.route('/login')
+   .post(userController.login)
 
 /**
  * @swagger
@@ -226,7 +233,7 @@ router.route('/update')
     .post(userController.updateUser);
 
 router.route('/delete')
-    .delete(userControllers.deleteUser);
+    .delete(userController.deleteUser);
     
 module.exports = router;
 
