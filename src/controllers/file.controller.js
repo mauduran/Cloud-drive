@@ -6,7 +6,6 @@ const createFile = async (req, res) => {
 
     if(!fileName || !owner) return res.status(400).json({error: true, message: "Missing required fields"});
 
-    
     //s3uploadFile()
     
     try {

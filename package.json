@@ -31,15 +31,18 @@
   },
   "homepage": "https://github.com/mauduran/Cloud-drive#readme",
   "dependencies": {
+    "aws-sdk": "^2.783.0",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "express-handlebars": "^5.1.0",
     "fs": "0.0.1-security",
+    "mongoose": "^5.10.9",
+    "multer": "^1.4.2",
+    "multer-s3": "^2.9.0",
     "swagger-jsdoc": "^4.3.1",
-    "swagger-ui-express": "^4.1.4",
-    "mongoose": "^5.10.9"
+    "swagger-ui-express": "^4.1.4"
   },
   "devDependencies": {
     "jest": "^26.6.0",

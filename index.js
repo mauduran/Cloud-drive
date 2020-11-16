@@ -12,6 +12,8 @@ const userRouter = require('./src/routes/user.route');
 const fileRouter = require('./src/routes/files.route');
 const filePermissionsRouter = require('./src/routes/filePermissions.route');
 
+const fileUploadUtils = require('./src/utils/file-upload.utils');
+
 require('dotenv').config();
 
 const app = express();
