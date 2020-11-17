@@ -78,6 +78,8 @@ router.route("/test")
 router.route('/login')
    .post(userController.login)
 
+router.route('/login/google')
+    .post(userController.googleLogin)
 /**
  * @swagger
  * /users/register:              

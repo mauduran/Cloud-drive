@@ -4,9 +4,15 @@ const TokenSchema = require('../models/tokens.model');
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
+require('dotenv').config();
+
+const {
+    OAuth2Client
+} = require('google-auth-library');
+
+const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID)
 
 let createUser = function (req, res) {
-
     let {
         name,
         password,
@@ -72,7 +78,9 @@ let login = function (req, res) {
         message: "Missing required fields"
     });
 
-    UserSchema.findOne({email})
+    UserSchema.findOne({
+            email
+        })
         .then(user => {
             if (user) {
                 const validCredentials = bcrypt.compareSync(password, user.hash);
@@ -176,6 +184,69 @@ let deleteUser = function (req, res) {
     })
 }
 
+let googleLogin = function (req, res) {
+    const id = req.body.id;
+    googleClient.verifyIdToken({
+            idToken: id
+        })
+        .then(googleResponse => {
+            const responseData = googleResponse.getPayload();
+            console.log(responseData);
+            const email = responseData.email;
+            UserSchema.findOne({
+                    email
+                })
+                .then(user => {
+                    if (user) {
+                        if (!user.googleId) {
+                            return UserSchema.updateOne({
+                                email
+                            }, {
+                                $set: {
+                                    googleId: id
+                                }
+                            })
+                        }
+                        return Promise.resolve(user)
+                    } else {
+                        let newUser = {
+                            name: `${responseData.given_name} ${responseData.family_name}`,
+                            googleId: id,
+                            email,
+                            joined: Date.now(),
+                            lastConnection: Date.now(),
+                            sharedWithMe: []
+                        }
+                        let userNew = UserSchema(newUser);
+                        return userNew.save()
+                    }
+                })
+                .then(user => {
+                    const token = signToken(user.email);
+                    const tokenObject = {
+                        userId: user._id,
+                        token
+                    }
+                    let tokenNew = TokenSchema(tokenObject);
+                    tokenNew.save((err) => {
+                        console.log(err)
+                        if (err) {
+                            return res.status(401).json("Unexpected Error!")
+                        } else {
+                            return res.json(tokenObject);
+                        }
+                    })
+                })
+                .catch(err => {
+                    console.log(err)
+                    res.status(400).json({
+                    error: true,
+                    message: "Could not login with google"
+                })})
+        })
+}
+
+
 let signToken = function (email) {
     return jwt.sign({
         email
@@ -189,5 +260,6 @@ module.exports = {
     updateUser,
     getUsers,
     deleteUser,
-    login
+    login,
+    googleLogin
 }

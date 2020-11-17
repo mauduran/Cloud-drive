@@ -8,7 +8,7 @@ let authMiddleware = function (req, res, next) {
     TokenSchema.findOne({token})
         .then(tokenObj => {
             if (tokenObj) {
-                console.log(token.token)
+                // console.log(token.token)
                 const verification = jwt.verify(tokenObj.token, process.env.TOKEN_SECRET)
                 if (verification) {
                     return UserSchema.findById(tokenObj.userId)
@@ -25,7 +25,7 @@ let authMiddleware = function (req, res, next) {
             console.log(error)
             return res.status(401).json({
             error: true,
-            message: "Unexpected Error!"}
+            message: "Invalid Token!"}
         )}
         )
 }
