@@ -191,7 +191,6 @@ let googleLogin = function (req, res) {
         })
         .then(googleResponse => {
             const responseData = googleResponse.getPayload();
-            console.log(responseData);
             const email = responseData.email;
             UserSchema.findOne({
                     email
@@ -199,7 +198,7 @@ let googleLogin = function (req, res) {
                 .then(user => {
                     if (user) {
                         if (!user.googleId) {
-                            return UserSchema.updateOne({
+                            return UserSchema.findOneAndUpdate({
                                 email
                             }, {
                                 $set: {
@@ -227,10 +226,11 @@ let googleLogin = function (req, res) {
                         userId: user._id,
                         token
                     }
+
                     let tokenNew = TokenSchema(tokenObject);
                     tokenNew.save((err) => {
-                        console.log(err)
                         if (err) {
+                            console.log(err)
                             return res.status(401).json("Unexpected Error!")
                         } else {
                             return res.json(tokenObject);
