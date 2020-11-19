@@ -230,7 +230,6 @@ router.route('/:id')
     .delete(userController.deleteUser);
 */
 
-
 router.route('/update')
     .post(userController.updateUser);
 
