@@ -2,6 +2,8 @@ const express = require('express');
 const userController = require('../controllers/user.controller');
 const authMiddleware = require("../middlewares/auth.middleware");
 
+var multer  = require('multer')
+var upload = multer();
 
 
 const router = express.Router();
@@ -32,8 +34,10 @@ router.route('/')
     .get(userController.getUsers);
 
 router.route("/test")
-    .get(authMiddleware, (req, res)=> {
-        console.log(req)
+    .post(upload.single('file'), (req, res) => {
+        console.log(req.body);
+        console.log(req.file);
+
         res.json("al cien")
     })
 // router.route('/getUser')
@@ -76,7 +80,7 @@ router.route("/test")
  */
 
 router.route('/login')
-   .post(userController.login)
+    .post(userController.login)
 
 router.route('/login/google')
     .post(userController.googleLogin)
@@ -122,7 +126,7 @@ router.route('/login/google')
 router.route('/register')
     .post(userController.createUser);
 
-    
+
 /**
  * @swagger
  * /update/password:
@@ -235,6 +239,6 @@ router.route('/update')
 
 router.route('/delete')
     .delete(userController.deleteUser);
-    
+
 module.exports = router;
 

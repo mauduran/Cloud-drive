@@ -55,6 +55,7 @@ let getUsers = function (req, res) {
             return res.json({
                 results: users.map(user => (
                     {
+                        id: user._id,
                         name: user.name,
                         email: user.email,
                         joined: user.joined,
