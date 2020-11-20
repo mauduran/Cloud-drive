@@ -1,6 +1,10 @@
 const express = require('express');
-const userControllers = require('../controllers/user.controllers');
-const userController = require('../controllers/user.controllers');
+const userController = require('../controllers/user.controller');
+const authMiddleware = require("../middlewares/auth.middleware");
+
+var multer  = require('multer')
+var upload = multer();
+
 
 const router = express.Router();
 
@@ -29,8 +33,15 @@ const router = express.Router();
 router.route('/')
     .get(userController.getUsers);
 
-router.route('/getUser')
-    .get(userController.getUser);
+router.route("/test")
+    .post(upload.single('file'), (req, res) => {
+        console.log(req.body);
+        console.log(req.file);
+
+        res.json("al cien")
+    })
+// router.route('/getUser')
+//     .get(userController.getUser);
 
 /**
  * @swagger
@@ -68,9 +79,11 @@ router.route('/getUser')
  *          description: Unexpected error
  */
 
-//router.route('/login')
-   // .post(userController.login)
+router.route('/login')
+    .post(userController.login)
 
+router.route('/login/google')
+    .post(userController.googleLogin)
 /**
  * @swagger
  * /users/register:              
@@ -113,7 +126,7 @@ router.route('/getUser')
 router.route('/register')
     .post(userController.createUser);
 
-    
+
 /**
  * @swagger
  * /update/password:
@@ -221,12 +234,11 @@ router.route('/:id')
     .delete(userController.deleteUser);
 */
 
-
 router.route('/update')
     .post(userController.updateUser);
 
 router.route('/delete')
-    .delete(userControllers.deleteUser);
-    
+    .delete(userController.deleteUser);
+
 module.exports = router;
 

@@ -23,7 +23,7 @@ app.set('view engine', 'handlebars');
 app.set('views', 'src/views');
 
 app.use(cors());
-app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
 app.get('/', (req, res)=>{

@@ -26,8 +26,9 @@ const createFile = async (path, fileName, owner) => {
 // Needs some tweaking
 const findFiles = async (owner, path) => {
     try {
-        const files = await FileSchema.find({owner, path});
-        return Promise.resolve(files);
+        const files = await FileSchema.find({owner, path, isDirectory: false});
+        const folders = await FileSchema.find({owner, path, isDirectory: true});
+        return Promise.resolve({files, folders});
     } catch (error) {
         return Promise.reject(error);
     }

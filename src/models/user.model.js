@@ -12,21 +12,24 @@ let userSchema = mongoose.Schema({
     },
     joined: {
         type:Date,
-        default: Date.now
+        default: Date.now   
     },
     imageUrl : {
-        type : String,  
+        type : String,
+        default: "assets/img/default-profile-pic"
     },
     lastConnection: {
         type:Date,
         default: Date.now
     },
-    multifactorSecret : {
-        type: String,
-        default : "None"
-    },
     sharedWithMe : {
         type: Array
+    },
+    hash:{
+        type: String
+    },
+    googleId:{
+        type: String
     }
 })
 
