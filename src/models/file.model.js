@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
 const FileLogSchema = require('./fileLog.model.js');
+const FilePermission = require('./filePermission.model.js')
 
 const fileConstants = require('../constants/file.constants');
 
@@ -45,9 +46,9 @@ let fileSchema = mongoose.Schema({
         type: Boolean,
         default: false
     },
-    comments: [{body:String, date: Date, sender: String}],
+    comments: [{body:String, date: Date, senderId: mongoose.Schema.Types.ObjectId, senderEmail: String}],
     version: Number,
-    sharedWith:  [mongoose.Schema.Types.ObjectId],
+    sharedWith:  [FilePermission],
     logs: [FileLogSchema]
 })
 

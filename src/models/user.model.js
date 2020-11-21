@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 
+const NotificationSchema = require('./notification.model');
+
 let userSchema = mongoose.Schema({
     name: {
         type:String,
@@ -22,15 +24,14 @@ let userSchema = mongoose.Schema({
         type:Date,
         default: Date.now
     },
-    sharedWithMe : {
-        type: Array
-    },
+    sharedWithMe : [mongoose.Schema.Types.ObjectId],
     hash:{
         type: String
     },
     googleId:{
         type: String
-    }
+    },
+    notifications: [NotificationSchema]
 })
 
 let User = mongoose.model("user", userSchema);

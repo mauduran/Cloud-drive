@@ -7,21 +7,6 @@ const { findByIdAndUpdate, findByIdAndDelete } = require('../models/user.model')
 
 
 
-// let FilePermission = mongoose.Schema({
-//     fileId: {
-//         type: mongoose.Schema.Types.ObjectId,
-//         required: true
-//     },
-//     userId: {
-//         type: mongoose.Schema.Types.ObjectId,
-//         required: true
-//     },
-//     permission:{
-//         type: String,
-//         enum: Object.values(PERMISSION_TYPES)
-//     } 
-// })
-
 const addFilePermission = async (fileId, email, permission) => {
     try {
         const user = await UserSchema.findOne({ email });
