@@ -50,25 +50,30 @@ let createUser = function (req, res) {
 let getUsers = function (req, res) {
     let searchInput = req.query.q || '';
     searchInput = searchInput.toLowerCase();
-    UserSchema.find({ email: { $regex: `^${searchInput}.*` } })
+    UserSchema.find({
+            email: {
+                $regex: `^${searchInput}.*`
+            }
+        })
         .then(users => {
             return res.json({
-                results: users.map(user => (
-                    {
-                        id: user._id,
-                        name: user.name,
-                        email: user.email,
-                        joined: user.joined,
-                        imageUrl: user.imageUrl,
-                        lastConnection: user.lastConnection
-                    }
-                )),
+                results: users.map(user => ({
+                    id: user._id,
+                    name: user.name,
+                    email: user.email,
+                    joined: user.joined,
+                    imageUrl: user.imageUrl,
+                    lastConnection: user.lastConnection
+                })),
                 size: users.length
             });
         })
         .catch(err => {
             console.log(err);
-            res.status(400).json({ error: true, message: "Unable to process request" });
+            res.status(400).json({
+                error: true,
+                message: "Unable to process request"
+            });
         })
 }
 
@@ -91,13 +96,13 @@ let updateUser = function (req, res) {
 
 
     UserSchema.findOne({
-        email
-    })
+            email
+        })
         .then(user => {
             if (user) {
                 UserSchema.findOneAndUpdate({
                     email: user.email
-                }, changes, function (req, res) { });
+                }, changes, function (req, res) {});
                 res.status(200).send({
                     message: 'Image updated!'
                 });
@@ -127,8 +132,8 @@ let login = function (req, res) {
     });
 
     UserSchema.findOne({
-        email
-    })
+            email
+        })
         .then(user => {
             if (user) {
                 const validCredentials = bcrypt.compareSync(password, user.hash);
@@ -191,14 +196,14 @@ let deleteUser = function (req, res) {
 let googleLogin = function (req, res) {
     const id = req.body.id;
     googleClient.verifyIdToken({
-        idToken: id
-    })
+            idToken: id
+        })
         .then(googleResponse => {
             const responseData = googleResponse.getPayload();
             const email = responseData.email;
             UserSchema.findOne({
-                email
-            })
+                    email
+                })
                 .then(user => {
                     if (user) {
                         if (!user.googleId) {
@@ -232,6 +237,7 @@ let googleLogin = function (req, res) {
                     }
 
                     let tokenNew = TokenSchema(tokenObject);
+                    console.log(tokenNew);
                     tokenNew.save((err) => {
                         if (err) {
                             console.log(err)
@@ -251,6 +257,81 @@ let googleLogin = function (req, res) {
         })
 }
 
+let changePassword = function (req, res) {
+    let {
+        email,
+        oldPassword,
+        newPassword
+    } = req.body;
+
+    // console.log(email, oldPassword, newPassword)
+    UserSchema.findOne({
+            email
+        })
+        .then(user => {
+            if (user) {
+                console.log(user);
+                const validCredentials = bcrypt.compareSync(oldPassword, user.hash);
+                console.log(validCredentials);
+                if (!validCredentials) return res.status(400).json({
+                    error: true,
+                    message: "Invalid credentials"
+                })
+
+                let hash = bcrypt.hashSync(newPassword, 10);
+                UserSchema.findOneAndUpdate({
+                    email: user.email
+                }, {
+                    $set: {
+                        hash: hash
+                    }
+                }).then(res.status(200).json({
+                    message: "Password Change Successful!"
+                }));
+
+
+            } else {
+                res.status(404).json({
+                    message: 'User not found!'
+                });
+            }
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(400).json(err);
+        })
+}
+
+let getUser = function (req, res) {
+    let id = req.body.id;
+    console.log('Hola')
+    console.log(req.body)
+    if (!id) return res.status(400).json({
+        error: true,
+        message: "Missing required fields"
+    });
+
+    UserSchema.findOne({
+        _id: id
+    })
+    .then(user => {
+        if(user) {
+            let info = {
+                name: user.name,
+                email: user.email,
+                img: user.imageUrl,
+                joined: user.joined
+            }
+            res.status(200).json({user: info, message: "User found!"})
+        } else {
+            res.status(404).json({message: "User not found!"})
+        }
+    })
+    .catch(err => {
+        console.log(err);
+        res.status(400).json(err);
+    })
+}
 
 let signToken = function (email) {
     return jwt.sign({
@@ -261,10 +342,11 @@ let signToken = function (email) {
 }
 module.exports = {
     createUser,
-    // getUser,
+    getUser,
     updateUser,
     getUsers,
     deleteUser,
     login,
-    googleLogin
+    googleLogin,
+    changePassword
 }

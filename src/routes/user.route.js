@@ -240,5 +240,11 @@ router.route('/update')
 router.route('/delete')
     .delete(userController.deleteUser);
 
+router.route('/changePassword')
+    .post(userController.changePassword);
+
+router.route('/getUser')
+    .post(userController.getUser);
+
 module.exports = router;
 
