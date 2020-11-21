@@ -2,14 +2,15 @@ const express = require('express');
 const fileController = require('../controllers/file.controller');
 const fileUpload = require('../utils/file-upload.utils')
 const router = express.Router();
-const fs = require('fs');
-const singleUpload = fileUpload.upload.single('file');
+const s3upload = fileUpload.upload.single('file');
+const auth = require('../middlewares/auth.middleware');
 
 router.route('/test')
     .post((req, res) => {
-        singleUpload(req, res, (err) => {
+        s3upload(req, res, (err) => {
             if (err) return res.status(401).json(err);
-            return res.json({ 'imageUrl': req.file.location });
+            console.log(req.body);
+            return res.json( 'al cien' );
         })
     })
     .get((req, res) => {
@@ -19,8 +20,8 @@ router.route('/test')
         fileStream.pipe(res);
     })
 router.route('/')
-    .post(fileController.createFile)
-    .get(fileController.getFiles)
+    .post(auth, s3upload, fileController.createFile)
+    .get(auth, fileController.getFiles)
     .put(fileController.updateFile);
 
 router.route('/:id')

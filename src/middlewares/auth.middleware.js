@@ -8,7 +8,6 @@ let authMiddleware = function (req, res, next) {
     TokenSchema.findOne({token})
         .then(tokenObj => {
             if (tokenObj) {
-                // console.log(token.token)
                 const verification = jwt.verify(tokenObj.token, process.env.TOKEN_SECRET)
                 if (verification) {
                     return UserSchema.findById(tokenObj.userId)
@@ -18,7 +17,7 @@ let authMiddleware = function (req, res, next) {
         })
         .then(user => {
             delete user.hash
-            req.body._user = user
+            req._user = user
             next()
         })
         .catch(error => {

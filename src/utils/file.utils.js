@@ -1,14 +1,17 @@
 const FileSchema = require('../models/file.model');
 const fileConstants = require('../constants/file.constants');
 
-const createFile = async (path, fileName, owner) => {
+
+const createFile = async (fileData) => {
     let newFile = {
-        path,
-        fileName,
-        storageId: Math.floor(Math.random()*1000), //This is going to be substituted with the uploadId to S3
-        owner,
+        path: fileData.path,
+        fileName: fileData.fileName,
+        storageId: fileData.storageName, 
+        owner: fileData.owner,
         accessedBy: [],
-        sharedWith: [],
+        sharedWith: fileData.sharedWith,
+        requiresVerification: fileData.needsVerification,
+        verificationStatus: (fileData.needsVerification)? fileConstants.VERIFICATION_STATUS_TYPES.PENDING: fileConstants.VERIFICATION_STATUS_TYPES.NOT_AVAILABLE,
         logs: []
     }
 
@@ -23,7 +26,6 @@ const createFile = async (path, fileName, owner) => {
 }
 
 
-// Needs some tweaking
 const findFiles = async (owner, path) => {
     try {
         const files = await FileSchema.find({owner, path, isDirectory: false});
