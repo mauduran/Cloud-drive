@@ -265,9 +265,7 @@ let changePassword = function (req, res) {
     } = req.body;
 
     // console.log(email, oldPassword, newPassword)
-    UserSchema.findOne({
-            email
-        })
+    UserSchema.findOne({email: email})
         .then(user => {
             if (user) {
                 console.log(user);
@@ -304,33 +302,63 @@ let changePassword = function (req, res) {
 
 let getUser = function (req, res) {
     let id = req.body.id;
-    console.log('Hola')
-    console.log(req.body)
     if (!id) return res.status(400).json({
         error: true,
         message: "Missing required fields"
     });
 
     UserSchema.findOne({
-        _id: id
-    })
-    .then(user => {
-        if(user) {
-            let info = {
-                name: user.name,
-                email: user.email,
-                img: user.imageUrl,
-                joined: user.joined
+            _id: id
+        })
+        .then(user => {
+            if (user) {
+                let info = {
+                    name: user.name,
+                    email: user.email,
+                    img: user.imageUrl,
+                    joined: user.joined
+                }
+                res.status(200).json({
+                    user: info,
+                    message: "User found!"
+                })
+            } else {
+                res.status(404).json({
+                    message: "User not found!"
+                })
             }
-            res.status(200).json({user: info, message: "User found!"})
-        } else {
-            res.status(404).json({message: "User not found!"})
-        }
-    })
-    .catch(err => {
-        console.log(err);
-        res.status(400).json(err);
-    })
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(400).json(err);
+        })
+}
+
+let changeName = function (req, res) {
+    let newName = req.body.newName;
+    let owner = req._user._id;
+    console.log(req.body);
+    console.log(req._user);
+    UserSchema.findById(owner)
+        .then(user => {
+            if (user) {
+                UserSchema.findOneAndUpdate({
+                    email: user.email
+                }, {
+                    $set: {
+                        name: newName
+                    }
+                }).then(res.status(200).json({message: "Name changed successfully!"}));
+            } else {
+                res.status(404).json({
+                    message: "User not found!"
+                })
+            }
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(400).json(err);
+        });
 }
 
 let signToken = function (email) {
@@ -348,5 +376,6 @@ module.exports = {
     deleteUser,
     login,
     googleLogin,
-    changePassword
+    changePassword,
+    changeName
 }

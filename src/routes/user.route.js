@@ -129,7 +129,7 @@ router.route('/register')
 
 /**
  * @swagger
- * /update/password:
+ * /changePassword:
  *  put:
  *    description: Update account password. Requires authorization
  *    tags: [Users]
@@ -160,10 +160,8 @@ router.route('/register')
  *      "404": 
  *        description: Not found
  */
-/*
-router.route('/update/password')
-    .put(userController.changePassword);
-*/
+router.route('/changePassword')
+    .post(userController.changePassword);
 
 /**
  * @swagger
@@ -240,8 +238,9 @@ router.route('/update')
 router.route('/delete')
     .delete(userController.deleteUser);
 
-router.route('/changePassword')
-    .post(userController.changePassword);
+router.route('/changeName')
+    .post(authMiddleware, userController.changeName);
+
 
 router.route('/getUser')
     .post(userController.getUser);
