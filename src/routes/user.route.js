@@ -238,5 +238,7 @@ router.route('/changeName')
 router.route('/getUser')
     .post(userController.getUser);
 
+router.route('/getProfileInfo')
+    .get(authMiddleware, userController.getProfileInfo)
 module.exports = router;
 

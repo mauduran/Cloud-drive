@@ -302,6 +302,17 @@ let changePassword = function (req, res) {
         })
 }
 
+let getProfileInfo = function (req, res) {
+    if(!req._user) res.status(404).json({error: true, message: "Could not get user profile"});
+    let info = {
+        name: req._user.name,
+        email: req._user.email,
+        img: req._user.imageUrl,
+        joined: req._user.joined
+    }
+    res.json({user:info, message: "User found"})
+}
+
 let getUser = function (req, res) {
     let id = req.body.id;
     if (!id) return res.status(400).json({
@@ -379,5 +390,6 @@ module.exports = {
     login,
     googleLogin,
     changePassword,
-    changeName
+    changeName,
+    getProfileInfo
 }
