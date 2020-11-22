@@ -1,28 +1,29 @@
+const fileUploadUtils = require('../utils/file-upload.utils');
 const fileUtils = require('../utils/file.utils');
 
 const createFile = async (req, res) => {
 
     let { path, fileName, extension, needsVerification, sharedWith, storageName } = req.body;
 
-    let owner = req._user._id;
+    let owner = {id: req._user._id, email: req._user.email};
     sharedWith = JSON.parse(sharedWith).map(user => {
-        return { userId: user.id, permission: user.permission }
+        return { userId: user.id, email: user.email, permission: user.permission }
     });
-    console.log(storageName);
     if (!path) path = '/';
-
+    
     if (!fileName || !owner || !extension || !needsVerification || !storageName) return res.status(400).json({ error: true, message: "Missing required fields" });
-
-
+    
+    
     try {
-        const existsDirectory = await fileUtils.existsDirectory(path, owner);
+        const existsDirectory = await fileUtils.existsDirectory(path, owner.id);
 
         if (path != "/" && !existsDirectory) return res.status(400).json({ error: true, message: "Path does not exist." })
-        const file = await fileUtils.findFile(path, fileName, owner);
+        const file = await fileUtils.findFile(path, fileName, owner.id);
 
         if (file.length) {
             return res.status(409).json({ error: true, message: "Trying to create file that already exists." });
         }
+
 
         const FileDocument = await fileUtils.createFile({ path, fileName, owner, extension, needsVerification, sharedWith, storageName });
         res.json(FileDocument);
@@ -37,7 +38,7 @@ const createFile = async (req, res) => {
 const createDirectory = async (req, res) => {
     let { path, dirName } = req.body;
     
-    let owner = req._user._id;
+    let owner = {id: req._user._id, email: req._user.email};
     if (!path) path = '/';
 
     if (path[0] != "/") path = '/' + path;
@@ -55,16 +56,16 @@ const createDirectory = async (req, res) => {
 
             let existsDir = await fileUtils.existsDirectory(prevPath, currentDirName, owner);
 
+
             if (!existsDir) return res.status(409).json({ error: true, message: "Path does not exist" });
         }
 
-        let newPath = path + "/" + dirName;
-
-        let existsNewDir = await fileUtils.existsDirectory(newPath, owner);
+        let existsNewDir = await fileUtils.existsDirectory(path, dirName, owner.id);
 
         if (existsNewDir) return res.status(409).json({ error: true, message: "Directory already exists" });
 
         const dirCreated = await fileUtils.createDirectory(path, owner, dirName);
+
         if (dirCreated) return res.json("Directory successully created");
         return res.status(400).json({ error: true, message: "Unexpected error" });
     } catch (error) {
@@ -76,7 +77,7 @@ const createDirectory = async (req, res) => {
 const getFiles = async (req, res) => {
     let { path } = req.query;
 
-    if (path) path = '/';
+    if (!path) path = '/';
     let owner = req._user._id;
 
     if (path[0] != '/') path = '/' + path;
@@ -91,6 +92,37 @@ const getFiles = async (req, res) => {
 
 }
 
+const getFile = async (req, res) => {
+    let { id } = req.params;
+
+    try {
+        const file = await fileUtils.findFileById(id, req._user._id)
+        if(!file.length) res.status(404).json({error: true, message: "Could not get access to requested file"})
+        res.json(file[0]);
+    } catch (error) {
+        console.log(error)
+        res.status(400).json({error: true, message: "Could not process request."})
+    }
+}
+
+const downloadFile = async (req, res) => {
+    let { id } = req.params;
+
+    try {
+        const file = await fileUtils.findFileById(id, req._user._id);
+
+        if(!file.length) return res.status(404).json({error: true, message: "Could not get resource."})
+        res.attachment(file[0].fileName);
+
+        const fileStream = fileUploadUtils.download(file[0].storageId);
+        fileStream.pipe(res);
+
+    } catch (error) {
+        console.log(error);
+        res.status(400).json({error: true, message: "Could not process request."})
+    }
+}
+
 const deleteFile = async (req, res) => {
     const { id } = req.params;
 
@@ -99,7 +131,7 @@ const deleteFile = async (req, res) => {
     // if(!owner) return res.status(400).json({error: true, message: "Missing required fields"});
 
     try {
-        fileUtils.removeFile(id);
+        await fileUtils.removeFile(id);
         res.json("File successfully removed");
     } catch (error) {
         console.log(error);
@@ -123,7 +155,6 @@ const deleteDirectory = async (req, res) => {
 
 const updateFile = async (req, res) => {
     let { path, fileName, owner } = req.body;
-    //Middleware?
     if (!path) path = '/';
 
     if (!fileName || !owner) return res.status(400).json({ error: true, message: "Missing required fields" });
@@ -147,7 +178,7 @@ const updateFile = async (req, res) => {
 
     } catch (error) {
         console.log(error);
-        res.status(400).json(error);
+        res.status(400).json({error: true, message: "Could not process request"});
     }
 }
 
@@ -157,5 +188,7 @@ module.exports = {
     createDirectory,
     deleteFile,
     deleteDirectory,
-    updateFile
+    updateFile,
+    getFile,
+    downloadFile
 }
