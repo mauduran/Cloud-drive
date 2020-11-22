@@ -77,7 +77,7 @@ const createDirectory = async (req, res) => {
 const getFiles = async (req, res) => {
     let { path } = req.query;
 
-    if (path) path = '/';
+    if (!path) path = '/';
     let owner = req._user._id;
 
     if (path[0] != '/') path = '/' + path;
