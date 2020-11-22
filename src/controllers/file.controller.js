@@ -59,7 +59,7 @@ const createDirectory = async (req, res) => {
 
             if (!existsDir) return res.status(409).json({ error: true, message: "Path does not exist" });
         }
-        
+
         let existsNewDir = await fileUtils.existsDirectory(path, dirName, owner.id);
 
         if (existsNewDir) return res.status(409).json({ error: true, message: "Directory already exists" });
@@ -109,14 +109,16 @@ const downloadFile = async (req, res) => {
     let { id } = req.params;
 
     try {
-        const file = await fileUtils.findFile(id, req._user._id);
+        const file = await fileUtils.findFileById(id, req._user._id);
 
-        res.attachment(file.fileName);
-        const fileStream = fileUpload.download(file.storageId);
+        if(!file.length) return res.status(404).json({error: true, message: "Could not get resource."})
+        res.attachment(file[0].fileName);
 
+        const fileStream = fileUploadUtils.download(file[0].storageId);
         fileStream.pipe(res);
 
     } catch (error) {
+        console.log(error);
         res.status(400).json({error: true, message: "Could not process request."})
     }
 }

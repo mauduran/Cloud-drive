@@ -50,7 +50,7 @@ const findFile = async (path, fileName, owner) =>{
 
 const findFileById = async (_id, user) =>{
     try {
-        const file = await FileSchema.find({_id, $or:[{owner: user}, {"sharedWith.userId": user}], isDirectory: false});
+        const file = await FileSchema.find({_id, $or:[{"owner.id": user}, {"sharedWith.userId": user}], isDirectory: false});
         if(file) return Promise.resolve(file);
         return Promise.resolve(null);
     } catch (error) {

@@ -5,6 +5,20 @@ const router = express.Router();
 const s3upload = fileUpload.upload.single('file');
 const auth = require('../middlewares/auth.middleware');
 
+router.route('/')
+.post(auth, s3upload, fileController.createFile)
+.get(auth, fileController.getFiles)
+.put(fileController.updateFile);
+
+router.route('/directory')
+.post(auth, fileController.createDirectory);
+
+router.route('/directory/:id')
+.delete(fileController.deleteDirectory)
+
+router.route('/download/:id')
+.get(auth, fileController.downloadFile);
+
 router.route('/test')
     .post((req, res) => {
         s3upload(req, res, (err) => {
@@ -14,27 +28,14 @@ router.route('/test')
         })
     })
     .get((req, res) => {
-        res.attachment("About-me.docx");
-        const fileStream = fileUpload.download('About-me1604348109594.docx');
+        res.attachment("Academic_Ivory_Israel_Arlina_5652.pdf");
+        const fileStream = fileUpload.download('Academic_Ivory_Israel_Arlina_5652.pdf');
 
         fileStream.pipe(res);
     })
-router.route('/')
-    .post(auth, s3upload, fileController.createFile)
-    .get(auth, fileController.getFiles)
-    .put(fileController.updateFile);
-
-router.route('/directory')
-    .post(auth, fileController.createDirectory);
-
-router.route('/directory/:id')
-    .delete(fileController.deleteDirectory)
-
-router.route('/get/:path')
-    .get(auth, fileController.getFiles)
 
 router.route('/:id')
-    .get(auth, fileController.getFile)
+.get(auth, fileController.getFile)
     .delete(fileController.deleteFile);
 
 
