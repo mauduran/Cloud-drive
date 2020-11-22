@@ -6,13 +6,21 @@ let Notification = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         require: true
     },
-    message: String,
+    message: {
+        type: String
+    },
     date: {
         type:Date,
         default: Date.now 
     },
     emitterUserId: {
         type: mongoose.Schema.Types.ObjectId
+    },
+    emitterEmail: {
+        type: String
+    },
+    fileName: {
+        type: String
     }
 })
 
