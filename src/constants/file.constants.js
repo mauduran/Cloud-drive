@@ -1,6 +1,7 @@
 const STATUS_TYPES = {
     ACTIVE: "Active",
     INACTIVE: "Inactive",
+    DELETED: "Deleted"
 }
 
 const VERIFICATION_STATUS_TYPES =  {

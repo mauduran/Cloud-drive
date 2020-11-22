@@ -11,7 +11,7 @@ const createFile = async (fileData) => {
         accessedBy: [],
         sharedWith: fileData.sharedWith,
         requiresVerification: fileData.needsVerification,
-        verificationStatus: (fileData.needsVerification)? fileConstants.VERIFICATION_STATUS_TYPES.PENDING: fileConstants.VERIFICATION_STATUS_TYPES.NOT_AVAILABLE,
+        verificationStatus: (fileData.needsVerification=="true")? fileConstants.VERIFICATION_STATUS_TYPES.PENDING: fileConstants.VERIFICATION_STATUS_TYPES.NOT_AVAILABLE,
         logs: []
     }
 
