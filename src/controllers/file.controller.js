@@ -35,29 +35,36 @@ const createFile = async (req, res) => {
 
 
 const createDirectory = async (req, res) => {
-    let { path, directoryName, owner } = req.body;
-
+    let { path, dirName } = req.body;
+    
+    let owner = req._user._id;
     if (!path) path = '/';
 
     if (path[0] != "/") path = '/' + path;
 
-    if (!directoryName || !owner) return res.status(400).json({ error: true, message: "Missing required fields" });
+    if (!dirName || !owner) return res.status(400).json({ error: true, message: "Missing required fields" });
 
     try {
 
         if (path != '/') {
-            let existsDir = await fileUtils.existsDirectory(path, owner);
+            let splitIndex = path.lastIndexOf('/');
+            let prevPath = path.substring(0, splitIndex);
+            let currentDirName = path.substring(splitIndex+1);
+
+            if(!prevPath) prevPath = '/';
+
+            let existsDir = await fileUtils.existsDirectory(prevPath, currentDirName, owner);
 
             if (!existsDir) return res.status(409).json({ error: true, message: "Path does not exist" });
         }
 
-        let newPath = path + "/" + directoryName;
+        let newPath = path + "/" + dirName;
 
         let existsNewDir = await fileUtils.existsDirectory(newPath, owner);
 
         if (existsNewDir) return res.status(409).json({ error: true, message: "Directory already exists" });
 
-        const dirCreated = await fileUtils.createDirectory(path, owner, directoryName);
+        const dirCreated = await fileUtils.createDirectory(path, owner, dirName);
         if (dirCreated) return res.json("Directory successully created");
         return res.status(400).json({ error: true, message: "Unexpected error" });
     } catch (error) {

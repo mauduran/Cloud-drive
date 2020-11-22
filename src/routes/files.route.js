@@ -29,7 +29,7 @@ router.route('/:id')
 
 
 router.route('/directory')
-    .post(fileController.createDirectory);
+    .post(auth, fileController.createDirectory);
 
 router.route('/directory/:id')
     .delete(fileController.deleteDirectory)
