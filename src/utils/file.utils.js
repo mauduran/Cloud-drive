@@ -7,7 +7,7 @@ const createFile = async (fileData) => {
         path: fileData.path,
         fileName: fileData.fileName,
         storageId: fileData.storageName, 
-        owner: fileData.owner,
+        owner: {id:fileData.owner.id, email: fileData.owner.email},
         accessedBy: [],
         sharedWith: fileData.sharedWith,
         requiresVerification: fileData.needsVerification,
@@ -15,12 +15,14 @@ const createFile = async (fileData) => {
         logs: []
     }
 
+    
     try {
         let FileDocument = FileSchema(newFile);
         await FileDocument.save();
         
         return Promise.resolve(FileDocument);
     } catch (error) {
+        console.log(error);
         return Promise.reject(null);
     }
 }
@@ -28,8 +30,8 @@ const createFile = async (fileData) => {
 
 const findFiles = async (owner, path) => {
     try {
-        const files = await FileSchema.find({owner, path, isDirectory: false});
-        const folders = await FileSchema.find({owner, path, isDirectory: true});
+        const files = await FileSchema.find({"owner.id":owner, path, isDirectory: false});
+        const folders = await FileSchema.find({"owner.id":owner, path, isDirectory: true});
         return Promise.resolve({files, folders});
     } catch (error) {
         return Promise.reject(error);
@@ -38,7 +40,17 @@ const findFiles = async (owner, path) => {
 
 const findFile = async (path, fileName, owner) =>{
     try {
-        const file = await FileSchema.find({path, fileName, owner, status: fileConstants.STATUS_TYPES.ACTIVE});
+        const file = await FileSchema.find({path, fileName, "owner.id": owner, status: fileConstants.STATUS_TYPES.ACTIVE});
+        if(file) return Promise.resolve(file);
+        return Promise.resolve(null);
+    } catch (error) {
+        return Promise.reject(error);
+    }
+}
+
+const findFileById = async (_id, user) =>{
+    try {
+        const file = await FileSchema.find({_id, $or:[{owner: user}, {"sharedWith.userId": user}], isDirectory: false});
         if(file) return Promise.resolve(file);
         return Promise.resolve(null);
     } catch (error) {
@@ -74,7 +86,8 @@ const createDirectory = async (path, owner, directoryName) => {
 
 const existsDirectory = async (path, dirName, owner) => {
     try {
-        const directory = await FileSchema.find({path, fileName: dirName, owner, isDirectory: true, status: fileConstants.STATUS_TYPES.ACTIVE});
+        console.log(path, dirName)
+        const directory = await FileSchema.find({path, fileName: dirName, "owner.id":owner, isDirectory: true, status: fileConstants.STATUS_TYPES.ACTIVE});
         if(directory.length) return Promise.resolve(true);
         return Promise.resolve(false);
     } catch (error) {
@@ -117,5 +130,6 @@ module.exports = {
     findFile,
     existsDirectory,
     removeFile,
-    removeDirectory
+    removeDirectory,
+    findFileById
 }

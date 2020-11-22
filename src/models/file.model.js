@@ -38,8 +38,8 @@ let fileSchema = mongoose.Schema({
         default: "not available"
     },
     owner: {
-        type: mongoose.Schema.Types.ObjectId,
-        required: true
+        id: mongoose.Schema.Types.ObjectId,
+        email: String
     },
     accessedBy: [mongoose.Schema.Types.ObjectId],
     isDirectory: {

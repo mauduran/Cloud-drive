@@ -10,7 +10,7 @@ router.route('/test')
         s3upload(req, res, (err) => {
             if (err) return res.status(401).json(err);
             console.log(req.body);
-            return res.json( 'al cien' );
+            return res.json('al cien');
         })
     })
     .get((req, res) => {
@@ -24,10 +24,6 @@ router.route('/')
     .get(auth, fileController.getFiles)
     .put(fileController.updateFile);
 
-router.route('/:id')
-    .delete(fileController.deleteFile);
-
-
 router.route('/directory')
     .post(auth, fileController.createDirectory);
 
@@ -35,6 +31,12 @@ router.route('/directory/:id')
     .delete(fileController.deleteDirectory)
 
 router.route('/get/:path')
-    .get(fileController.getFiles)
+    .get(auth, fileController.getFiles)
+
+router.route('/:id')
+    .get(auth, fileController.getFile)
+    .delete(fileController.deleteFile);
+
+
 module.exports = router;
 
