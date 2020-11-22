@@ -11,7 +11,7 @@ const createFile = async (fileData) => {
         accessedBy: [],
         sharedWith: fileData.sharedWith,
         requiresVerification: fileData.needsVerification,
-        verificationStatus: (fileData.needsVerification)? fileConstants.VERIFICATION_STATUS_TYPES.PENDING: fileConstants.VERIFICATION_STATUS_TYPES.NOT_AVAILABLE,
+        verificationStatus: (fileData.needsVerification=="true")? fileConstants.VERIFICATION_STATUS_TYPES.PENDING: fileConstants.VERIFICATION_STATUS_TYPES.NOT_AVAILABLE,
         logs: []
     }
 
@@ -86,7 +86,10 @@ const createDirectory = async (path, owner, directoryName) => {
 
 const existsDirectory = async (path, dirName, owner) => {
     try {
-        console.log(path, dirName)
+        console.log("Dirname")
+        console.log(dirName);
+        console.log("PATH")
+        console.log(path);
         const directory = await FileSchema.find({path, fileName: dirName, "owner.id":owner, isDirectory: true, status: fileConstants.STATUS_TYPES.ACTIVE});
         if(directory.length) return Promise.resolve(true);
         return Promise.resolve(false);

@@ -31,15 +31,8 @@ const router = express.Router();
  *        description: Unexpected error. 
  */
 router.route('/')
-    .get(userController.getUsers);
+    .get(authMiddleware, userController.getUsers);
 
-router.route("/test")
-    .post(upload.single('file'), (req, res) => {
-        console.log(req.body);
-        console.log(req.file);
-
-        res.json("al cien")
-    })
 // router.route('/getUser')
 //     .get(userController.getUser);
 

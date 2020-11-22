@@ -15,9 +15,18 @@ const createFile = async (req, res) => {
     
     
     try {
-        const existsDirectory = await fileUtils.existsDirectory(path, owner.id);
 
-        if (path != "/" && !existsDirectory) return res.status(400).json({ error: true, message: "Path does not exist." })
+        if (path != '/') {
+            let splitIndex = path.lastIndexOf('/');
+            let prevPath = path.substring(0, splitIndex);
+            let currentDirName = path.substring(splitIndex+1);
+
+            if(!prevPath) prevPath = "/";
+            let existsDir = await fileUtils.existsDirectory(prevPath, currentDirName, owner.id);
+
+            if (!existsDir) return res.status(409).json({ error: true, message: "Path does not exist" });
+        }
+
         const file = await fileUtils.findFile(path, fileName, owner.id);
 
         if (file.length) {
@@ -54,7 +63,7 @@ const createDirectory = async (req, res) => {
 
             if(!prevPath) prevPath = '/';
 
-            let existsDir = await fileUtils.existsDirectory(prevPath, currentDirName, owner);
+            let existsDir = await fileUtils.existsDirectory(prevPath, currentDirName, owner.id);
 
 
             if (!existsDir) return res.status(409).json({ error: true, message: "Path does not exist" });

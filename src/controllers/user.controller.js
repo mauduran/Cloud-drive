@@ -57,14 +57,16 @@ let getUsers = function (req, res) {
         })
         .then(users => {
             return res.json({
-                results: users.map(user => ({
-                    id: user._id,
-                    name: user.name,
-                    email: user.email,
-                    joined: user.joined,
-                    imageUrl: user.imageUrl,
-                    lastConnection: user.lastConnection
-                })),
+                results: users.filter(user=>user.email!=req._user.email).map(user => (
+                    {
+                        id: user._id,
+                        name: user.name,
+                        email: user.email,
+                        joined: user.joined,
+                        imageUrl: user.imageUrl,
+                        lastConnection: user.lastConnection
+                    }
+                )),
                 size: users.length
             });
         })
