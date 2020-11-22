@@ -53,7 +53,7 @@ let getUsers = function (req, res) {
     UserSchema.find({ email: { $regex: `^${searchInput}.*` } })
         .then(users => {
             return res.json({
-                results: users.map(user => (
+                results: users.filter(user=>user.email!=req._user.email).map(user => (
                     {
                         id: user._id,
                         name: user.name,
