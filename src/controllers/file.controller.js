@@ -224,6 +224,33 @@ const updateFile = async (req, res) => {
     }
 }
 
+const getDirectory = async (req, res) => {
+    let { path } = req.query;
+
+    let splitPath = [];
+
+    let dirName = '';
+    let newPath = '';
+
+    if (!path) path = '/';
+    let user = req._user;
+    if (path[0] != '/') path = '/' + path;
+
+    splitPath = path.split('/');
+    dirName = splitPath.pop();
+    newPath = splitPath.join('/');
+    
+    try {
+        const file = await fileUtils.findDirectory(newPath, dirName, user._id);
+        console.log(file);
+        if(!file.length) res.status(404).json({error: true, message: "Could not get access to requested directory"})
+        res.json(true);
+    } catch (error) {
+        console.log(error)
+        res.status(400).json({error: true, message: "Could not process request."})
+    }
+}
+
 module.exports = {
     createFile,
     getFiles,
@@ -234,5 +261,6 @@ module.exports = {
     getFile,
     downloadFile,
     getSharedFiles,
-    getPendingFiles
+    getPendingFiles,
+    getDirectory
 }

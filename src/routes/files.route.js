@@ -25,6 +25,9 @@ router.route('/sharedFiles')
 router.route('/pendingFiles')
 .get(auth, fileController.getPendingFiles)
 
+router.route('/existDirectory')
+.get(auth, fileController.getDirectory)
+
 router.route('/test')
     .post((req, res) => {
         s3upload(req, res, (err) => {
