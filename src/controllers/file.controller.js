@@ -114,6 +114,39 @@ const getFile = async (req, res) => {
     }
 }
 
+
+const getSharedFiles = async (req, res) => {
+    let { path } = req.query;
+    if (!path) path = '/';
+    let user = req._user;
+    if (path[0] != '/') path = '/' + path;
+
+    try {
+        const files = await fileUtils.findSharedFiles(user, path);
+        return res.json(files);
+    } catch (error) {
+        console.log(error)
+        return res.status(400).json({ error: true, message: "Unexpected Error" })
+    }
+
+}
+
+const getPendingFiles = async (req, res) => {
+    let { path } = req.query;
+    if (!path) path = '/';
+    let user = req._user;
+    if (path[0] != '/') path = '/' + path;
+
+    try {
+        const files = await fileUtils.findPendingFiles(user, path);
+        return res.json(files);
+    } catch (error) {
+        console.log(error)
+        return res.status(400).json({ error: true, message: "Unexpected Error" })
+    }
+
+}
+
 const downloadFile = async (req, res) => {
     let { id } = req.params;
 
@@ -199,5 +232,7 @@ module.exports = {
     deleteDirectory,
     updateFile,
     getFile,
-    downloadFile
+    downloadFile,
+    getSharedFiles,
+    getPendingFiles
 }

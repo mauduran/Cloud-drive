@@ -19,6 +19,12 @@ router.route('/directory/:id')
 router.route('/download/:id')
 .get(auth, fileController.downloadFile);
 
+router.route('/sharedFiles')
+.get(auth, fileController.getSharedFiles)
+
+router.route('/pendingFiles')
+.get(auth, fileController.getPendingFiles)
+
 router.route('/test')
     .post((req, res) => {
         s3upload(req, res, (err) => {

@@ -38,7 +38,26 @@ const findFiles = async (owner, path) => {
     }
 }
 
-const findFile = async (path, fileName, owner) =>{
+const findSharedFiles= async (user, path) => {
+    try {
+        let files = await FileSchema.find({"sharedWith.userId": user._id, isDirectory: false});
+        let folders = await FileSchema.find({"sharedWith.userId": user._id, isDirectory: true});
+        return Promise.resolve({files, folders});
+    } catch (error) {
+        return Promise.reject(error);
+    }
+}
+
+const findPendingFiles = async (user, path) => {
+    try {
+        let files = await FileSchema.find({"sharedWith.userId": user._id, isDirectory: false, verificationStatus: fileConstants.VERIFICATION_STATUS_TYPES.PENDING});
+        return Promise.resolve(files);
+    } catch (error) {
+        return Promise.reject(error);
+    }
+}
+
+const findFile = async (path, fileName, owner) => {
     try {
         const file = await FileSchema.find({path, fileName, "owner.id": owner, status: fileConstants.STATUS_TYPES.ACTIVE});
         if(file) return Promise.resolve(file);
@@ -134,5 +153,7 @@ module.exports = {
     existsDirectory,
     removeFile,
     removeDirectory,
-    findFileById
+    findFileById,
+    findSharedFiles,
+    findPendingFiles
 }
