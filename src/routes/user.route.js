@@ -77,6 +77,10 @@ router.route('/login')
 
 router.route('/login/google')
     .post(userController.googleLogin)
+
+
+router.route('/logout')
+    .post(authMiddleware, userController.logOut);
 /**
  * @swagger
  * /users/register:              
@@ -226,17 +230,17 @@ router.route('/:id')
 */
 
 router.route('/update')
-    .post(userController.updateUser);
+    .post(authMiddleware, userController.updateUser);
 
 router.route('/delete')
-    .delete(userController.deleteUser);
+    .delete(authMiddleware, userController.deleteUser);
 
 router.route('/changeName')
     .post(authMiddleware, userController.changeName);
 
 
 router.route('/getUser')
-    .post(userController.getUser);
+    .post(authMiddleware, userController.getUser);
 
 router.route('/getProfileInfo')
     .get(authMiddleware, userController.getProfileInfo)
