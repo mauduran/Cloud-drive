@@ -46,7 +46,7 @@ let fileSchema = mongoose.Schema({
         type: Boolean,
         default: false
     },
-    comments: [{body:String, date: Date, senderId: mongoose.Schema.Types.ObjectId, senderEmail: String}],
+    comments: [{body:String, date: Date, senderId: mongoose.Schema.Types.ObjectId, senderEmail: String, type: String}],
     version: {
        type: Number,
        default: 0
