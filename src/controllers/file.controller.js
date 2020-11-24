@@ -1,27 +1,28 @@
 const fileUploadUtils = require('../utils/file-upload.utils');
 const fileUtils = require('../utils/file.utils');
+const fileConstants = require('../constants/file.constants');
 
 const createFile = async (req, res) => {
 
     let { path, fileName, extension, needsVerification, sharedWith, storageName } = req.body;
 
-    let owner = {id: req._user._id, email: req._user.email};
+    let owner = { id: req._user._id, email: req._user.email };
     sharedWith = JSON.parse(sharedWith).map(user => {
         return { userId: user.id, email: user.email, permission: user.permission }
     });
     if (!path) path = '/';
-    
+
     if (!fileName || !owner || !extension || !needsVerification || !storageName) return res.status(400).json({ error: true, message: "Missing required fields" });
-    
-    
+
+
     try {
 
         if (path != '/') {
             let splitIndex = path.lastIndexOf('/');
             let prevPath = path.substring(0, splitIndex);
-            let currentDirName = path.substring(splitIndex+1);
+            let currentDirName = path.substring(splitIndex + 1);
 
-            if(!prevPath) prevPath = "/";
+            if (!prevPath) prevPath = "/";
             let existsDir = await fileUtils.existsDirectory(prevPath, currentDirName, owner.id);
 
             if (!existsDir) return res.status(409).json({ error: true, message: "Path does not exist" });
@@ -43,11 +44,34 @@ const createFile = async (req, res) => {
     }
 }
 
+const updateFile = async (req, res) => {
+    let { fileInfo, extension, storageName } = req.body;
+
+    fileInfo = JSON.parse(fileInfo);
+
+    if(fileInfo.status!=fileConstants.STATUS_TYPES.ACTIVE) {
+        return res.status(400).json({error: true, message: ""})
+    }
+
+    if (!fileInfo || !storageName) return res.status(400).json({ error: true, message: "Missing required fields" });
+
+    try {
+        const result = await fileUtils.changeFileToInactive(fileInfo._id);
+        const newFile = await fileUtils.createNewVersionOfFile(fileInfo, storageName);
+
+        res.json(newFile);
+
+    } catch (error) {
+        console.log(error);
+        res.status(400).json({ error: true, message: error });
+    }
+}
+
 
 const createDirectory = async (req, res) => {
     let { path, dirName } = req.body;
-    
-    let owner = {id: req._user._id, email: req._user.email};
+
+    let owner = { id: req._user._id, email: req._user.email };
     if (!path) path = '/';
 
     if (path[0] != "/") path = '/' + path;
@@ -59,9 +83,9 @@ const createDirectory = async (req, res) => {
         if (path != '/') {
             let splitIndex = path.lastIndexOf('/');
             let prevPath = path.substring(0, splitIndex);
-            let currentDirName = path.substring(splitIndex+1);
+            let currentDirName = path.substring(splitIndex + 1);
 
-            if(!prevPath) prevPath = '/';
+            if (!prevPath) prevPath = '/';
 
             let existsDir = await fileUtils.existsDirectory(prevPath, currentDirName, owner.id);
 
@@ -106,11 +130,11 @@ const getFile = async (req, res) => {
 
     try {
         const file = await fileUtils.findFileById(id, req._user._id)
-        if(!file.length) res.status(404).json({error: true, message: "Could not get access to requested file"})
+        if (!file.length) res.status(404).json({ error: true, message: "Could not get access to requested file" })
         res.json(file[0]);
     } catch (error) {
         console.log(error)
-        res.status(400).json({error: true, message: "Could not process request."})
+        res.status(400).json({ error: true, message: "Could not process request." })
     }
 }
 
@@ -153,7 +177,7 @@ const downloadFile = async (req, res) => {
     try {
         const file = await fileUtils.findFileById(id, req._user._id);
 
-        if(!file.length) return res.status(404).json({error: true, message: "Could not get resource."})
+        if (!file.length) return res.status(404).json({ error: true, message: "Could not get resource." })
         res.attachment(file[0].fileName);
 
         const fileStream = fileUploadUtils.download(file[0].storageId);
@@ -161,7 +185,7 @@ const downloadFile = async (req, res) => {
 
     } catch (error) {
         console.log(error);
-        res.status(400).json({error: true, message: "Could not process request."})
+        res.status(400).json({ error: true, message: "Could not process request." })
     }
 }
 
@@ -208,34 +232,6 @@ const deleteDirectory = async (req, res) => {
     }
 }
 
-const updateFile = async (req, res) => {
-    let { path, fileName, owner } = req.body;
-    if (!path) path = '/';
-
-    if (!fileName || !owner) return res.status(400).json({ error: true, message: "Missing required fields" });
-
-    try {
-
-        if (path != "/") {
-            const existsDirectory = await fileUtils.existsDirectory(path, owner);
-            if (!existsDirectory) return res.status(400).json({ error: true, message: "Path does not exist." })
-
-        }
-
-        const file = await fileUtils.findFile(path, fileName, owner);
-
-        if (file.length) {
-            await fileUtils.removeFile(file[0]._id);
-        }
-
-        const FileDocument = await fileUtils.createFile(path, fileName, owner);
-        res.json(FileDocument);
-
-    } catch (error) {
-        console.log(error);
-        res.status(400).json({error: true, message: "Could not process request"});
-    }
-}
 
 const getDirectory = async (req, res) => {
     let { path } = req.query;
@@ -257,16 +253,16 @@ const getDirectory = async (req, res) => {
 
     newPath = splitPath.join('/');
 
-    if(newPath[0]!='/') newPath = '/' + newPath;
+    if (newPath[0] != '/') newPath = '/' + newPath;
 
     try {
         const file = await fileUtils.findDirectory(newPath, dirName, user._id);
 
-        if(!file.length) res.status(404).json(false)
+        if (!file.length) res.status(404).json(false)
         res.status(200).json(true);
     } catch (error) {
         console.log(error)
-        res.status(400).json({error: true, message: "Could not process request."})
+        res.status(400).json({ error: true, message: "Could not process request." })
     }
 }
 
