@@ -28,6 +28,9 @@ router.route('/pendingFiles')
 router.route('/existDirectory')
 .get(auth, fileController.getDirectory)
 
+router.route('/deleteFile')
+.delete(auth, fileController.deleteFile)
+
 router.route('/test')
     .post((req, res) => {
         s3upload(req, res, (err) => {

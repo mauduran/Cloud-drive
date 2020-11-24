@@ -138,6 +138,16 @@ const removeFile = async (fileId) => {
     }
 }
 
+const removeFileAllVersions = async (fileId) => {
+    // try {
+
+    //     return Promise.resolve(true);
+    // } catch (error) {
+    //     console.log(error);
+    //     return Promise.reject(false);
+    // }
+}
+
 // Needs some tweaking
 const removeDirectory =  async (fileId) => {
     try {

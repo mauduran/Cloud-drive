@@ -181,6 +181,19 @@ const deleteFile = async (req, res) => {
     }
 }
 
+const deleteFileByPath = async (req, res) => {
+    let { id } = req.params;
+    console.log(req.params)
+    console.log(id);
+    // try {
+    //     await fileUtils.removeFile(id);
+    //     res.json("File successfully removed");
+    // } catch (error) {
+    //     console.log(error);
+    //     res.status(500).json({ error: true, message: "Unexpected Error" });
+    // }
+}
+
 const deleteDirectory = async (req, res) => {
     const { id } = req.params;
 
@@ -271,5 +284,6 @@ module.exports = {
     downloadFile,
     getSharedFiles,
     getPendingFiles,
-    getDirectory
+    getDirectory,
+    deleteFileByPath
 }
