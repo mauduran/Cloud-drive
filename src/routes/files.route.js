@@ -28,21 +28,6 @@ router.route('/pendingFiles')
 router.route('/existDirectory')
 .get(auth, fileController.getDirectory)
 
-router.route('/test')
-    .post((req, res) => {
-        s3upload(req, res, (err) => {
-            if (err) return res.status(401).json(err);
-            console.log(req.body);
-            return res.json('al cien');
-        })
-    })
-    .get((req, res) => {
-        res.attachment("Academic_Ivory_Israel_Arlina_5652.pdf");
-        const fileStream = fileUpload.download('Academic_Ivory_Israel_Arlina_5652.pdf');
-
-        fileStream.pipe(res);
-    })
-
 router.route('/:id')
 .get(auth, fileController.getFile)
     .delete(fileController.deleteFile);

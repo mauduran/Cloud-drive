@@ -239,7 +239,6 @@ let googleLogin = function (req, res) {
                     }
 
                     let tokenNew = TokenSchema(tokenObject);
-                    console.log(tokenNew);
                     tokenNew.save((err) => {
                         if (err) {
                             console.log(err)
@@ -266,13 +265,11 @@ let changePassword = function (req, res) {
         newPassword
     } = req.body;
 
-    // console.log(email, oldPassword, newPassword)
     UserSchema.findOne({email: email})
         .then(user => {
             if (user) {
-                console.log(user);
                 const validCredentials = bcrypt.compareSync(oldPassword, user.hash);
-                console.log(validCredentials);
+
                 if (!validCredentials) return res.status(400).json({
                     error: true,
                     message: "Invalid credentials"
@@ -350,8 +347,7 @@ let getUser = function (req, res) {
 let changeName = function (req, res) {
     let newName = req.body.newName;
     let owner = req._user._id;
-    console.log(req.body);
-    console.log(req._user);
+
     UserSchema.findById(owner)
         .then(user => {
             if (user) {
