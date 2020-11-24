@@ -51,13 +51,13 @@ let getUsers = function (req, res) {
     let searchInput = req.query.q || '';
     searchInput = searchInput.toLowerCase();
     UserSchema.find({
-            email: {
-                $regex: `^${searchInput}.*`
-            }
-        })
+        email: {
+            $regex: `^${searchInput}.*`
+        }
+    })
         .then(users => {
             return res.json({
-                results: users.filter(user=>user.email!=req._user.email).map(user => (
+                results: users.filter(user => user.email != req._user.email).map(user => (
                     {
                         id: user._id,
                         name: user.name,
@@ -98,13 +98,13 @@ let updateUser = function (req, res) {
 
 
     UserSchema.findOne({
-            email
-        })
+        email
+    })
         .then(user => {
             if (user) {
                 UserSchema.findOneAndUpdate({
                     email: user.email
-                }, changes, function (req, res) {});
+                }, changes, function (req, res) { });
                 res.status(200).send({
                     message: 'Image updated!'
                 });
@@ -134,8 +134,8 @@ let login = function (req, res) {
     });
 
     UserSchema.findOne({
-            email
-        })
+        email
+    })
         .then(user => {
             if (user) {
                 const validCredentials = bcrypt.compareSync(password, user.hash);
@@ -172,6 +172,17 @@ let login = function (req, res) {
         })
 }
 
+let logOut = async function (req, res) {
+    let token = req.headers.authorization;
+    try {
+        await TokenSchema.deleteOne({ token })
+        res.json({ message: "Logout successfull" });
+    } catch (error) {
+        res.json({ message: "Token did not exist" })
+    }
+
+}
+
 let deleteUser = function (req, res) {
     let {
         email
@@ -198,14 +209,14 @@ let deleteUser = function (req, res) {
 let googleLogin = function (req, res) {
     const id = req.body.id;
     googleClient.verifyIdToken({
-            idToken: id
-        })
+        idToken: id
+    })
         .then(googleResponse => {
             const responseData = googleResponse.getPayload();
             const email = responseData.email;
             UserSchema.findOne({
-                    email
-                })
+                email
+            })
                 .then(user => {
                     if (user) {
                         if (!user.googleId) {
@@ -239,7 +250,6 @@ let googleLogin = function (req, res) {
                     }
 
                     let tokenNew = TokenSchema(tokenObject);
-                    console.log(tokenNew);
                     tokenNew.save((err) => {
                         if (err) {
                             console.log(err)
@@ -266,13 +276,11 @@ let changePassword = function (req, res) {
         newPassword
     } = req.body;
 
-    // console.log(email, oldPassword, newPassword)
-    UserSchema.findOne({email: email})
+    UserSchema.findOne({ email: email })
         .then(user => {
             if (user) {
-                console.log(user);
                 const validCredentials = bcrypt.compareSync(oldPassword, user.hash);
-                console.log(validCredentials);
+
                 if (!validCredentials) return res.status(400).json({
                     error: true,
                     message: "Invalid credentials"
@@ -303,14 +311,14 @@ let changePassword = function (req, res) {
 }
 
 let getProfileInfo = function (req, res) {
-    if(!req._user) res.status(404).json({error: true, message: "Could not get user profile"});
+    if (!req._user) res.status(404).json({ error: true, message: "Could not get user profile" });
     let info = {
         name: req._user.name,
         email: req._user.email,
         img: req._user.imageUrl,
         joined: req._user.joined
     }
-    res.json({user:info, message: "User found"})
+    res.json({ user: info, message: "User found" })
 }
 
 let getUser = function (req, res) {
@@ -321,8 +329,8 @@ let getUser = function (req, res) {
     });
 
     UserSchema.findOne({
-            _id: id
-        })
+        _id: id
+    })
         .then(user => {
             if (user) {
                 let info = {
@@ -350,8 +358,7 @@ let getUser = function (req, res) {
 let changeName = function (req, res) {
     let newName = req.body.newName;
     let owner = req._user._id;
-    console.log(req.body);
-    console.log(req._user);
+
     UserSchema.findById(owner)
         .then(user => {
             if (user) {
@@ -361,7 +368,7 @@ let changeName = function (req, res) {
                     $set: {
                         name: newName
                     }
-                }).then(res.status(200).json({message: "Name changed successfully!"}));
+                }).then(res.status(200).json({ message: "Name changed successfully!" }));
             } else {
                 res.status(404).json({
                     message: "User not found!"
@@ -377,9 +384,7 @@ let changeName = function (req, res) {
 let signToken = function (email) {
     return jwt.sign({
         email
-    }, process.env.TOKEN_SECRET, {
-        expiresIn: "3h"
-    });
+    }, process.env.TOKEN_SECRET);
 }
 module.exports = {
     createUser,
@@ -391,5 +396,6 @@ module.exports = {
     googleLogin,
     changePassword,
     changeName,
-    getProfileInfo
+    getProfileInfo,
+    logOut
 }

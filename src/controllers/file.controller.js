@@ -239,13 +239,11 @@ const updateFile = async (req, res) => {
 
 const getDirectory = async (req, res) => {
     let { path } = req.query;
-    // console.log('GetDirectory');
 
     let splitPath = [];
 
     let dirName = '';
     let newPath = '';
-    // console.log('Recien dirName: ', dirName)
 
     if (!path) path = '/';
 
@@ -254,17 +252,16 @@ const getDirectory = async (req, res) => {
     if (path[0] != '/') path = '/' + path;
 
     splitPath = path.split('/');
-    // console.log('splitPath: ', splitPath)
+
     dirName = splitPath.pop();
-    // console.log('splitPath después del POP: ', splitPath)
+
     newPath = splitPath.join('/');
-    // console.log('newPath: ', newPath)
-    // console.log('dirName: ', dirName)
+
     if(newPath[0]!='/') newPath = '/' + newPath;
-    // console.log('newPath final: ', newPath)
+
     try {
         const file = await fileUtils.findDirectory(newPath, dirName, user._id);
-        // console.log(file);
+
         if(!file.length) res.status(404).json(false)
         res.status(200).json(true);
     } catch (error) {
