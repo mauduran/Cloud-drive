@@ -377,9 +377,7 @@ let changeName = function (req, res) {
 let signToken = function (email) {
     return jwt.sign({
         email
-    }, process.env.TOKEN_SECRET, {
-        expiresIn: "3h"
-    });
+    }, process.env.TOKEN_SECRET);
 }
 module.exports = {
     createUser,

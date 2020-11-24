@@ -47,7 +47,10 @@ let fileSchema = mongoose.Schema({
         default: false
     },
     comments: [{body:String, date: Date, senderId: mongoose.Schema.Types.ObjectId, senderEmail: String}],
-    version: Number,
+    version: {
+       type: Number,
+       default: 0
+    },
     sharedWith:  [FilePermission],
     logs: [FileLogSchema]
 })
