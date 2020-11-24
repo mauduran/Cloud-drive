@@ -33,9 +33,6 @@ const createFile = async (fileData) => {
 const createNewVersionOfFile = async (fileData, storageName) => {
     const newVersion = fileData.version + 1;
     let newComments = fileData.comments;
-
-    console.log(newComments);
-
     let newFile = {
         path: fileData.path,
         fileName: fileData.fileName,

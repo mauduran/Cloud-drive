@@ -207,8 +207,6 @@ const deleteFile = async (req, res) => {
 
 const deleteFileByPath = async (req, res) => {
     let { id } = req.params;
-    console.log(req.params)
-    console.log(id);
     // try {
     //     await fileUtils.removeFile(id);
     //     res.json("File successfully removed");
