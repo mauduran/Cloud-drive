@@ -14,7 +14,7 @@ const s3 = new aws.S3();
 const upload = multer({
     storage: multerS3({
         s3: s3,
-        bucket: 'cloud-drive-test',
+        bucket: process.env.AWS_S3_FILE_BUCKET,
         metadata: function (req, file, cb) {
             cb(null, { originalname: file.originalname + req.body.extension, mimetype: file.mimetype });
         },
@@ -30,7 +30,7 @@ const upload = multer({
 
 const download = (key) => {
     const params = {
-        Bucket: 'cloud-drive-test',
+        Bucket: process.env.AWS_S3_FILE_BUCKET,
         Key: key
     };
     

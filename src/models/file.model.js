@@ -4,6 +4,7 @@ const FileLogSchema = require('./fileLog.model.js');
 const FilePermission = require('./filePermission.model.js')
 
 const fileConstants = require('../constants/file.constants');
+const CommentSchema = require('./fileComment.model.js');
 
 let fileSchema = mongoose.Schema({
     path: {
@@ -46,7 +47,7 @@ let fileSchema = mongoose.Schema({
         type: Boolean,
         default: false
     },
-    comments: [{body:String, date: Date, senderId: mongoose.Schema.Types.ObjectId, senderEmail: String, type: String}],
+    comments: [CommentSchema],
     version: {
        type: Number,
        default: 0

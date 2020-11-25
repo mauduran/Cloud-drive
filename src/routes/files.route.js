@@ -8,7 +8,7 @@ const auth = require('../middlewares/auth.middleware');
 router.route('/')
 .post(auth, s3upload, fileController.createFile)
 .get(auth, fileController.getFiles)
-.put(fileController.updateFile);
+.put(auth, s3upload, fileController.updateFile);
 
 router.route('/directory')
 .post(auth, fileController.createDirectory);
