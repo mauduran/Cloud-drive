@@ -3,7 +3,7 @@ const UserSchema = require('../models/user.model');
 const TokenSchema = require('../models/tokens.model');
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-
+const userUtils = require('../utils/user.utils')
 require('dotenv').config();
 
 const {
@@ -381,6 +381,25 @@ let changeName = function (req, res) {
         });
 }
 
+
+const updatePhotoByUser = async (req, res) => {
+    let { fileName, storageName } = req.body;
+    let owner = { id: req._user._id, email: req._user.email };
+    let loc = req.file.location;
+    
+    if (!fileName || !storageName || !owner) return res.status(400).json({ error: true, message: "Missing required fields" });
+
+    try {
+        const result = await userUtils.updatePhotoByUserId(owner.id, loc);
+        
+        return res.status(200).json(result);
+
+    } catch (error) {
+        console.log(error);
+        return res.status(400).json({ error: true, message: error });
+    }
+}
+
 let signToken = function (email) {
     return jwt.sign({
         email
@@ -397,5 +416,6 @@ module.exports = {
     changePassword,
     changeName,
     getProfileInfo,
-    logOut
+    logOut,
+    updatePhotoByUser
 }

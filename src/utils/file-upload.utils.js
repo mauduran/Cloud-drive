@@ -27,6 +27,30 @@ const upload = multer({
     })
 })
 
+const uploadImage = multer({
+    storage: multerS3({
+        s3: s3,
+        bucket: process.env.AWS_S3_IMAGE_BUCKET,
+        acl: 'public-read',
+        metadata: function (req, file, cb) {
+            cb(null, { originalname: file.originalname + req.body.extension, mimetype: file.mimetype });
+        },
+        key: function (req, file, cb) {
+            let storageName = generateRandomName()+ req.body.extension;
+            req.body.storageName = storageName;
+            req.body.fileName = file.originalname + req.body.extension;
+            cb(null, storageName);
+        }
+    }),
+    fileFilter : (req, file, cb) => {
+        if (file.mimetype.startsWith("image")) {
+            cb(null, true)
+        } else {
+            cb(null, false)
+        }
+    }
+})
+
 
 const download = (key) => {
     const params = {
@@ -50,6 +74,7 @@ const deleteMany = (arrayKeys) => {
 
 module.exports = {
     upload,
+    uploadImage,
     download,
     deleteMany
 }

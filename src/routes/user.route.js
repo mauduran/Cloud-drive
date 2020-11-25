@@ -1,6 +1,8 @@
 const express = require('express');
 const userController = require('../controllers/user.controller');
 const authMiddleware = require("../middlewares/auth.middleware");
+const fileUpload = require('../utils/file-upload.utils')
+const s3uploadImage = fileUpload.uploadImage.single('file');
 
 var multer  = require('multer')
 var upload = multer();
@@ -244,5 +246,9 @@ router.route('/getUser')
 
 router.route('/getProfileInfo')
     .get(authMiddleware, userController.getProfileInfo)
+
+router.route('/updateImage')
+.put(authMiddleware, s3uploadImage, userController.updatePhotoByUser)
+
 module.exports = router;
 

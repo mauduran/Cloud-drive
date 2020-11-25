@@ -67,6 +67,25 @@ const updateFile = async (req, res) => {
     }
 }
 
+// const updatePhotoByUser = async (req, res) => {
+//     let { fileName, storageName } = req.body;
+//     let owner = { id: req._user._id, email: req._user.email };
+//     let loc = req.file.location;
+    
+//     fileName = JSON.parse(fileName);
+
+//     if (!fileName || !storageName || !owner) return res.status(400).json({ error: true, message: "Missing required fields" });
+
+//     try {
+//         const result = await fileUtils.updatePhotoByUserId(owner.id, loc);
+//         res.status(200).json(result);
+
+//     } catch (error) {
+//         console.log(error);
+//         res.status(400).json({ error: true, message: error });
+//     }
+// }
+
 
 const createDirectory = async (req, res) => {
     let { path, dirName } = req.body;
