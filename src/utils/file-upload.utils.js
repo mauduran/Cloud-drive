@@ -10,6 +10,7 @@ aws.config.update({
 })
 
 const s3 = new aws.S3();
+
 const upload = multer({
     storage: multerS3({
         s3: s3,
@@ -36,8 +37,19 @@ const download = (key) => {
     return s3.getObject(params).createReadStream();
 }
 
+const deleteMany = (arrayKeys) => {
+    const params = {
+        Bucket : process.env.AWS_S3_BUCKET,
+        Delete : {
+            Objects : arrayKeys,
+            Quiet : false
+        }
+    };
+    return s3.deleteObjects(params).promise();
+}
 
 module.exports = {
     upload,
-    download
+    download,
+    deleteMany
 }
