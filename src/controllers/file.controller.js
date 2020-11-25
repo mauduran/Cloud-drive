@@ -125,6 +125,29 @@ const getFiles = async (req, res) => {
 
 }
 
+const getVersionsByFile = async (req, res) => {
+    let { id } = req.params;
+
+    let user = req._user;
+
+    try {
+        let file = await fileUtils.findFileById(id, user._id)
+
+        let files = await fileUtils.findAllVersionsByFile(file[0].path, file[0].fileName, file[0].owner.id); 
+
+        if(!files) return res.status(500);
+        // console.log(files);
+        let versions = files.map(file => ({id : file._id, date : file.dateOfCreation, version : file.version, status: file.status, versionWithNumber: 'Version ' + file.version}));
+        // versions.sort((a, b) => {b.version - a.version})
+        
+        return res.status(200).json(versions);
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ falied: true, message: "Unexpected Error", err: {error} });
+    }
+}
+
 const getFile = async (req, res) => {
     let { id } = req.params;
 
@@ -289,6 +312,7 @@ const updateVerificationStatus = async (req, res) =>{
     }
 }
 
+
 module.exports = {
     createFile,
     getFiles,
@@ -302,5 +326,6 @@ module.exports = {
     getPendingFiles,
     getDirectory,
     deleteFileByPath,
-    updateVerificationStatus
+    updateVerificationStatus,
+    getVersionsByFile
 }

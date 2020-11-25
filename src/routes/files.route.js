@@ -34,6 +34,9 @@ router.route('/deleteFile/:id')
 router.route('/updateVerificationStatus')
 .post(fileController.updateVerificationStatus);
 
+router.route('/getVersions/:id')
+.get(auth, fileController.getVersionsByFile);
+
 router.route('/test')
     .post((req, res) => {
         s3upload(req, res, (err) => {
