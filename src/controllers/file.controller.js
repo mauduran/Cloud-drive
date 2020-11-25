@@ -183,15 +183,39 @@ const deleteFile = async (req, res) => {
 
 const deleteFileByPath = async (req, res) => {
     let { id } = req.params;
-    console.log(req.params)
-    console.log(id);
-    // try {
-    //     await fileUtils.removeFile(id);
-    //     res.json("File successfully removed");
-    // } catch (error) {
-    //     console.log(error);
-    //     res.status(500).json({ error: true, message: "Unexpected Error" });
-    // }
+
+    let user = req._user;
+
+    try {
+        let file = await fileUtils.findFileById(id, user._id)
+        console.log('My file: ', file);
+
+        let response = await fileUtils.findAllVersionsFileAndDelete(file[0].path, file[0].fileName, file[0].owner.id); //{files, deleted}
+        if(!response) return res.status(500);
+
+        let files = response.files;
+        // let deleted = response.deleted;
+        // console.log(files, deleted);
+        // console.log(files, deleted);
+        console.log(files);
+
+        // let aws_keys = [];
+
+        // files.forEach(obj => {
+        //     aws_keys.push({Key: obj.storageId})
+        // });
+
+        // let aws_keys = [];
+        const aws_keys = files.map(file => ({Key: file.storageId}));
+        console.log(aws_keys);
+
+        // fileUploadUtils.deleteMany(aws_keys).then(data => {
+        //     return res.status(200).json(data);
+        // });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ falied: true, message: "Unexpected Error", err: {error} });
+    }
 }
 
 const deleteDirectory = async (req, res) => {
@@ -262,11 +286,11 @@ const getDirectory = async (req, res) => {
     try {
         const file = await fileUtils.findDirectory(newPath, dirName, user._id);
 
-        if(!file.length) res.status(404).json(false)
-        res.status(200).json(true);
+        if(file.length == 0) return res.status(404).json(false);
+        return res.status(200).json(true);
     } catch (error) {
         console.log(error)
-        res.status(400).json({error: true, message: "Could not process request."})
+        return res.status(400).json({error: true, message: "Could not process request."})
     }
 }
 

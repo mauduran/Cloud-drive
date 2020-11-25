@@ -67,11 +67,27 @@ const findFile = async (path, fileName, owner) => {
     }
 }
 
+const findAllVersionsFileAndDelete = async (path, fileName, owner) => {
+    try {
+        const files = await FileSchema.find({path, fileName, "owner.id": owner});
+        console.log('Files en findAllVersionsFileAndDelete: ', files);
+        // const deleted = await FileSchema.deleteMany({path, fileName, "owner.id": owner})
+        // console.log('Deleted en findAllVersionsFileAndDelete: ', deleted);
+
+        // if(files && deleted.deletedCount > 0 && deleted.ok) return Promise.resolve({files, deleted});
+        if(files) return Promise.resolve({files});
+        return Promise.resolve(null);
+    } catch (error) {
+        return Promise.reject(error);
+    }
+}
+
 const findDirectory = async (path, dirName, owner) => {
     try {
         const file = await FileSchema.find({path: path, fileName: dirName, "owner.id": owner, status: fileConstants.STATUS_TYPES.ACTIVE, isDirectory: true});
-        if(file) return file;
-        return Promise.resolve(null);
+        // console.log(file);
+        if(file) return Promise.resolve(file);
+        return Promise.resolve([]);
     } catch (error) {
         return Promise.reject(error);
     }
@@ -172,5 +188,6 @@ module.exports = {
     findFileById,
     findSharedFiles,
     findPendingFiles,
-    findDirectory
+    findDirectory,
+    findAllVersionsFileAndDelete
 }
