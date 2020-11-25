@@ -31,6 +31,9 @@ router.route('/existDirectory')
 router.route('/deleteFile/:id')
 .delete(auth, fileController.deleteFileByPath)
 
+router.route('/updateVerificationStatus')
+.post(fileController.updateVerificationStatus);
+
 router.route('/test')
     .post((req, res) => {
         s3upload(req, res, (err) => {
@@ -48,7 +51,7 @@ router.route('/test')
 
 router.route('/:id')
 .get(auth, fileController.getFile)
-    .delete(fileController.deleteFile);
+.delete(fileController.deleteFile);
 
 
 module.exports = router;

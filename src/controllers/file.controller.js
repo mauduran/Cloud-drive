@@ -278,6 +278,17 @@ const getDirectory = async (req, res) => {
     }
 }
 
+const updateVerificationStatus = async (req, res) =>{
+    const {id, status} = req.body;
+    if(!id || !status) return res.status(400).json({ error: true, message: "missing fields" });
+    try{
+        await fileUtils.updateVerificationStatus(id, status);
+        res.json("File Verification Status Updated");
+    }catch (error){
+        res.status(400).json({ error: true, message: "Something went wrong" });
+    }
+}
+
 module.exports = {
     createFile,
     getFiles,
@@ -290,5 +301,6 @@ module.exports = {
     getSharedFiles,
     getPendingFiles,
     getDirectory,
-    deleteFileByPath
+    deleteFileByPath,
+    updateVerificationStatus
 }

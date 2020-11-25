@@ -217,6 +217,16 @@ const removeDirectory = async (fileId) => {
     }
 }
 
+const updateVerificationStatus= async (id, status) => {
+    try {
+        await FileSchema.findByIdAndUpdate(id, { $set:{verificationStatus: status} });
+        return Promise.resolve(true);
+    } catch (error) {
+        console.log(error);
+        return Promise.reject(false);
+    }
+}
+
 
 module.exports = {
     createFile,
@@ -232,5 +242,6 @@ module.exports = {
     findDirectory,
     findAllVersionsFileAndDelete,
     createNewVersionOfFile,
-    changeFileToInactive
+    changeFileToInactive,
+    updateVerificationStatus
 }
