@@ -31,6 +31,9 @@ router.route('/existDirectory')
 router.route('/deleteFile/:id')
 .delete(auth, fileController.deleteFileByPath)
 
+router.route('/getVersions/:id')
+.get(auth, fileController.getVersionsByFile);
+
 router.route('/test')
     .post((req, res) => {
         s3upload(req, res, (err) => {

@@ -124,6 +124,16 @@ const findAllVersionsFileAndDelete = async (path, fileName, owner) => {
     }
 }
 
+const findAllVersionsByFile = async (path, fileName, owner) => {
+    try {
+        const files = await FileSchema.find({path, fileName, "owner.id": owner});
+        if(files) return Promise.resolve(files);
+        return Promise.resolve(null);
+    } catch (error) {
+        return Promise.reject(error);
+    }
+}
+
 const findDirectory = async (path, dirName, owner) => {
     try {
         const file = await FileSchema.find({ path: path, fileName: dirName, "owner.id": owner, status: fileConstants.STATUS_TYPES.ACTIVE, isDirectory: true });
@@ -232,5 +242,6 @@ module.exports = {
     findDirectory,
     findAllVersionsFileAndDelete,
     createNewVersionOfFile,
-    changeFileToInactive
+    changeFileToInactive,
+    findAllVersionsByFile
 }
