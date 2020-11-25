@@ -116,12 +116,8 @@ const findFile = async (path, fileName, owner) => {
 const findAllVersionsFileAndDelete = async (path, fileName, owner) => {
     try {
         const files = await FileSchema.find({path, fileName, "owner.id": owner});
-        console.log('Files en findAllVersionsFileAndDelete: ', files);
-        // const deleted = await FileSchema.deleteMany({path, fileName, "owner.id": owner})
-        // console.log('Deleted en findAllVersionsFileAndDelete: ', deleted);
-
-        // if(files && deleted.deletedCount > 0 && deleted.ok) return Promise.resolve({files, deleted});
-        if(files) return Promise.resolve({files});
+        const deleted = await FileSchema.deleteMany({path, fileName, "owner.id": owner})
+        if(files && deleted.deletedCount > 0 && deleted.ok) return Promise.resolve({files, deleted});
         return Promise.resolve(null);
     } catch (error) {
         return Promise.reject(error);
