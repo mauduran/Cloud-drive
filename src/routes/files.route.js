@@ -28,8 +28,14 @@ router.route('/pendingFiles')
 router.route('/existDirectory')
 .get(auth, fileController.getDirectory)
 
-router.route('/deleteFile')
-.delete(auth, fileController.deleteFile)
+router.route('/deleteFile/:id')
+.delete(auth, fileController.deleteFileByPath)
+
+router.route('/updateVerificationStatus')
+.post(fileController.updateVerificationStatus);
+
+router.route('/getVersions/:id')
+.get(auth, fileController.getVersionsByFile);
 
 router.route('/test')
     .post((req, res) => {
@@ -48,7 +54,7 @@ router.route('/test')
 
 router.route('/:id')
 .get(auth, fileController.getFile)
-    .delete(fileController.deleteFile);
+.delete(fileController.deleteFile);
 
 
 module.exports = router;

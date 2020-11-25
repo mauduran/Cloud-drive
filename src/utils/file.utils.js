@@ -112,6 +112,27 @@ const findFile = async (path, fileName, owner) => {
     }
 }
 
+const findAllVersionsFileAndDelete = async (path, fileName, owner) => {
+    try {
+        const files = await FileSchema.find({path, fileName, "owner.id": owner});
+        const deleted = await FileSchema.deleteMany({path, fileName, "owner.id": owner})
+        if(files && deleted.deletedCount > 0 && deleted.ok) return Promise.resolve({files, deleted});
+        return Promise.resolve(null);
+    } catch (error) {
+        return Promise.reject(error);
+    }
+}
+
+const findAllVersionsByFile = async (path, fileName, owner) => {
+    try {
+        const files = await FileSchema.find({path, fileName, "owner.id": owner});
+        if(files) return Promise.resolve(files);
+        return Promise.resolve(null);
+    } catch (error) {
+        return Promise.reject(error);
+    }
+}
+
 const findDirectory = async (path, dirName, owner) => {
     try {
         const file = await FileSchema.find({ path: path, fileName: dirName, "owner.id": owner, status: fileConstants.STATUS_TYPES.ACTIVE, isDirectory: true });
@@ -205,6 +226,16 @@ const removeDirectory = async (fileId) => {
     }
 }
 
+const updateVerificationStatus= async (id, status) => {
+    try {
+        await FileSchema.findByIdAndUpdate(id, { $set:{verificationStatus: status} });
+        return Promise.resolve(true);
+    } catch (error) {
+        console.log(error);
+        return Promise.reject(false);
+    }
+}
+
 
 module.exports = {
     createFile,
@@ -218,6 +249,9 @@ module.exports = {
     findSharedFiles,
     findPendingFiles,
     findDirectory,
+    findAllVersionsFileAndDelete,
     createNewVersionOfFile,
-    changeFileToInactive
+    changeFileToInactive,
+    updateVerificationStatus,
+    findAllVersionsByFile
 }

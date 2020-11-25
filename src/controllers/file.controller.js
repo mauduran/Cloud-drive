@@ -125,6 +125,29 @@ const getFiles = async (req, res) => {
 
 }
 
+const getVersionsByFile = async (req, res) => {
+    let { id } = req.params;
+
+    let user = req._user;
+
+    try {
+        let file = await fileUtils.findFileById(id, user._id)
+
+        let files = await fileUtils.findAllVersionsByFile(file[0].path, file[0].fileName, file[0].owner.id); 
+
+        if(!files) return res.status(500);
+        // console.log(files);
+        let versions = files.map(file => ({id : file._id, date : file.dateOfCreation, version : file.version, status: file.status, versionWithNumber: 'Version ' + file.version}));
+        // versions.sort((a, b) => {b.version - a.version})
+        
+        return res.status(200).json(versions);
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ falied: true, message: "Unexpected Error", err: {error} });
+    }
+}
+
 const getFile = async (req, res) => {
     let { id } = req.params;
 
@@ -207,13 +230,27 @@ const deleteFile = async (req, res) => {
 
 const deleteFileByPath = async (req, res) => {
     let { id } = req.params;
-    // try {
-    //     await fileUtils.removeFile(id);
-    //     res.json("File successfully removed");
-    // } catch (error) {
-    //     console.log(error);
-    //     res.status(500).json({ error: true, message: "Unexpected Error" });
-    // }
+
+    let user = req._user;
+
+    try {
+        let file = await fileUtils.findFileById(id, user._id)
+
+        let response = await fileUtils.findAllVersionsFileAndDelete(file[0].path, file[0].fileName, file[0].owner.id); //{files, deleted}
+        if(!response) return res.status(500);
+
+        let files = response.files;
+        let deleted = response.deleted;
+
+        const aws_keys = files.map(file => ({Key: file.storageId}));
+
+        fileUploadUtils.deleteMany(aws_keys).then(data => {
+            return res.status(200).json(data);
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ falied: true, message: "Unexpected Error", err: {error} });
+    }
 }
 
 const deleteDirectory = async (req, res) => {
@@ -256,13 +293,25 @@ const getDirectory = async (req, res) => {
     try {
         const file = await fileUtils.findDirectory(newPath, dirName, user._id);
 
-        if (!file.length) res.status(404).json(false)
-        res.status(200).json(true);
+        if(file.length == 0) return res.status(404).json(false);
+        return res.status(200).json(true);
     } catch (error) {
         console.log(error)
-        res.status(400).json({ error: true, message: "Could not process request." })
+        return res.status(400).json({error: true, message: "Could not process request."})
     }
 }
+
+const updateVerificationStatus = async (req, res) =>{
+    const {id, status} = req.body;
+    if(!id || !status) return res.status(400).json({ error: true, message: "missing fields" });
+    try{
+        await fileUtils.updateVerificationStatus(id, status);
+        res.json("File Verification Status Updated");
+    }catch (error){
+        res.status(400).json({ error: true, message: "Something went wrong" });
+    }
+}
+
 
 module.exports = {
     createFile,
@@ -276,5 +325,7 @@ module.exports = {
     getSharedFiles,
     getPendingFiles,
     getDirectory,
-    deleteFileByPath
+    deleteFileByPath,
+    updateVerificationStatus,
+    getVersionsByFile
 }
