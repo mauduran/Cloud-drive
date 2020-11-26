@@ -200,16 +200,6 @@ const removeFile = async (fileId) => {
     }
 }
 
-const removeFileAllVersions = async (fileId) => {
-    // try {
-
-    //     return Promise.resolve(true);
-    // } catch (error) {
-    //     console.log(error);
-    //     return Promise.reject(false);
-    // }
-}
-
 // Needs some tweaking
 const removeDirectory = async (fileId) => {
     try {
@@ -236,6 +226,16 @@ const updateVerificationStatus= async (id, status) => {
     }
 }
 
+const updaterFileSharing = async (fileId, ownerId, sharedWith) => {
+    try {
+        const response = await FileSchema.findOneAndUpdate({_id: fileId, "owner.id": ownerId}, {sharedWith});
+        if(response) return Promise.resolve(true);
+
+        return Promise.reject(false);
+    } catch (error) {
+        return Promise.reject(false);
+    }
+}
 
 module.exports = {
     createFile,
@@ -253,5 +253,6 @@ module.exports = {
     createNewVersionOfFile,
     changeFileToInactive,
     updateVerificationStatus,
-    findAllVersionsByFile
+    findAllVersionsByFile,
+    updaterFileSharing
 }
