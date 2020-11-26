@@ -4,6 +4,7 @@ const TokenSchema = require('../models/tokens.model');
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const userUtils = require('../utils/user.utils')
+const notificationUtils = require('../utils/notification.utils');
 require('dotenv').config();
 
 const {
@@ -409,6 +410,21 @@ let signToken = function (email) {
 const getNotifications = (req, res) => {
     res.json(req._user.notifications);
 }
+
+const deleteNotification = async (req, res)=> {
+    let _userId= req._user._id;
+    let {id} = req.params;
+    if(!id) return res.status(400).json({ error: true, message: "Missing notification ID" });
+    try {
+        console.log
+        const result = await notificationUtils.deleteNotification(_userId, id);
+        return res.status(200).json(result);
+    } catch (error) {
+        console.log(error);
+        return res.status(400).json({ error: true, message: error });
+    }
+
+}
 module.exports = {
     createUser,
     getUser,
@@ -422,5 +438,6 @@ module.exports = {
     getProfileInfo,
     logOut,
     updatePhotoByUser,
-    getNotifications
+    getNotifications,
+    deleteNotification
 }

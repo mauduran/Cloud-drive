@@ -250,6 +250,11 @@ router.route('/getProfileInfo')
 
 router.route('/notifications')
     .get(authMiddleware, userController.getNotifications);
+
+router.route('/notifications/:id')
+    .delete(authMiddleware, userController.deleteNotification);
+
+
 router.route('/updateImage')
 .put(authMiddleware, s3uploadImage, userController.updatePhotoByUser)
 

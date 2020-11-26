@@ -17,6 +17,15 @@ const generateNotification = async (userId, message, file) => {
     }
 }
 
+const deleteNotification = async( userId, notificationId) =>{
+    try {
+        const res = await UserSchema.findByIdAndUpdate(userId, {$pull: {notifications:{ _id: notificationId} }});
+        return Promise.resolve(true);
+    } catch (error) {
+        return Promise.reject(false); 
+    }
+}
+
 
 
 // const getUserNotifications = async(userId) => {
@@ -49,5 +58,6 @@ const generateNotification = async (userId, message, file) => {
 // }
 
 module.exports = {
-    generateNotification
+    generateNotification,
+    deleteNotification
 }
