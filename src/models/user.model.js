@@ -18,7 +18,7 @@ let userSchema = mongoose.Schema({
     },
     imageUrl : {
         type : String,
-        default: "assets/img/default-profile-pic"
+        default: "assets/img/default-profile-pic.jpg"
     },
     lastConnection: {
         type:Date,
