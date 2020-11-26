@@ -405,6 +405,10 @@ let signToken = function (email) {
         email
     }, process.env.TOKEN_SECRET);
 }
+
+const getNotifications = (req, res) => {
+    res.json(req._user.notifications);
+}
 module.exports = {
     createUser,
     getUser,
@@ -417,5 +421,6 @@ module.exports = {
     changeName,
     getProfileInfo,
     logOut,
-    updatePhotoByUser
+    updatePhotoByUser,
+    getNotifications
 }

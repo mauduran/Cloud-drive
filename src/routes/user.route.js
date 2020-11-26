@@ -247,6 +247,9 @@ router.route('/getUser')
 router.route('/getProfileInfo')
     .get(authMiddleware, userController.getProfileInfo)
 
+
+router.route('/notifications')
+    .get(authMiddleware, userController.getNotifications);
 router.route('/updateImage')
 .put(authMiddleware, s3uploadImage, userController.updatePhotoByUser)
 
