@@ -136,7 +136,6 @@ const getVersionsByFile = async (req, res) => {
         let files = await fileUtils.findAllVersionsByFile(file[0].path, file[0].fileName, file[0].owner.id); 
 
         if(!files) return res.status(500);
-        // console.log(files);
         let versions = files.map(file => ({id : file._id, date : file.dateOfCreation, version : file.version, status: file.status, versionWithNumber: 'Version ' + file.version}));
         // versions.sort((a, b) => {b.version - a.version})
         
