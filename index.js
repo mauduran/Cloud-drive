@@ -101,25 +101,38 @@ io.on('connection', socket => {
                 message = 'change verification on file';
                 break;
             default:
-                return;
+                break;
         }
-        // console.log(message)
-        console.log(data)
+
+
+        const emitter = (file.owner.id==userId)? file.owner: sharedWith
+          .map(user=>({email:user.email, id: user.userId}))
+          .find(user=>user.id==userId);
+
+        console.log(emitter)
+
+        if (!message) return;
         try {
             sharedWith.forEach(async user => {
-                console.log('Usuario a compartir: ')
-                console.log(user)
-                await notificationUtils.generateNotification(user.userId, message, file);
+                await notificationUtils.generateNotification(user.userId, message, file, emitter);
                 userSocket = socketUtils.getSocketIdFromUser(user.userId);
-                
-                if(userSocket) {
-                    console.log(userSocket)
-                    socket.to(userSocket).emit('notification', {message, file:file});
+
+                if (userSocket) {
+                    socket.to(userSocket).emit('notification', { message, file, emitter });
                 }
             })
+            if(emitter.id != file.owner.id) {
+                console.log("notif al owner")
+                await notificationUtils.generateNotification(file.owner.id, message, file, emitter);
+
+                userSocket = socketUtils.getSocketIdFromUser(file.owner.id);
+                if (userSocket) {
+                    socket.to(userSocket).emit('notification', { message, file });
+                }
+            }
         } catch (error) {
             console.log(error);
-            socket.emit("notificationError", {error: "Could not create notification for " + message})
+            socket.emit("notificationError", { error: "Could not create notification for " + message })
         }
     })
 
