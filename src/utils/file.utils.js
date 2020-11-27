@@ -53,7 +53,6 @@ const createNewVersionOfFile = async (fileData, storageName) => {
             body: `version ${newVersion}`,
             senderId: mongoose.Types.ObjectId(fileData.owner.id),
             senderEmail: fileData.owner.email,
-            date: new Date(),
             type: "newVersion"
         }],
         sharedWith: fileData.sharedWith,

@@ -166,12 +166,12 @@ io.on('connection', socket => {
                 id: user.userId
             }))
             .find(user => user.id == userId);
-        
+
         try {
             let comment = await fileUtils.writeComment(file, emitter, message);
             sharedWith.forEach(async user => {
                 await notificationUtils.generateNotification(user.userId, message, file, emitter);
-                userSocket = socketUtils.getSocketIdFromUser(user.userId);
+                let userSocket = socketUtils.getSocketIdFromUser(user.userId);
 
                 if (userSocket) {
                     socket.to(userSocket).emit('notification', {
@@ -180,25 +180,25 @@ io.on('connection', socket => {
                         emitter,
                         type: 'comment'
                     });
-                    socket.to(userSocket).emit('comment', comment);
+                    io.to(userSocket).emit('comment', comment);
                 }
             })
-            if (emitter.id != file.owner.id) {
-                await notificationUtils.generateNotification(file.owner.id, message, file, emitter);
 
-                userSocket = socketUtils.getSocketIdFromUser(file.owner.id);
-                if (userSocket) {
+            let userSocket = socketUtils.getSocketIdFromUser(file.owner.id);
+            if (userSocket) {
+                if (emitter.id != file.owner.id) {
+                    await notificationUtils.generateNotification(file.owner.id, message, file, emitter);
                     socket.to(userSocket).emit('notification', {
                         message: 'commented file',
                         file,
                         emitter,
                         type: 'comment'
                     });
-                    socket.to(userSocket).emit('comment', comment);
                 }
+                io.to(userSocket).emit('comment', comment);
             }
         } catch (error) {
-            
+            console.log(error);
         }
     })
 
