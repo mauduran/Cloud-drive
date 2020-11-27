@@ -118,7 +118,7 @@ io.on('connection', socket => {
                 userSocket = socketUtils.getSocketIdFromUser(user.userId);
 
                 if (userSocket) {
-                    socket.to(userSocket).emit('notification', { message, file, emitter });
+                    socket.to(userSocket).emit('notification', { message, file, emitter, type });
                 }
             })
             if(emitter.id != file.owner.id) {
@@ -126,7 +126,7 @@ io.on('connection', socket => {
 
                 userSocket = socketUtils.getSocketIdFromUser(file.owner.id);
                 if (userSocket) {
-                    socket.to(userSocket).emit('notification', { message, file });
+                    socket.to(userSocket).emit('notification', { message, file, type });
                 }
             }
         } catch (error) {
