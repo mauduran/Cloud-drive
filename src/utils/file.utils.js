@@ -267,6 +267,24 @@ const updateFileSharing = async (fileId, ownerId, sharedWith) => {
     }
 }
 
+const writeComment = async (file, emitter, message) => {
+    try {
+        let newComment = {
+            senderId : emitter.id,
+            senderEmail: emitter.email,
+            body: message,
+            fileName: file.fileName,
+            fileId: file._id
+        }
+        const res = await FileSchema.findByIdAndUpdate(file._id, {$push: {comments: newComment}}, {new:true});
+        console.log(res.comments[res.comments.length - 1]);
+        return Promise.resolve(res.comments[res.comments.length - 1]);
+
+    } catch (error) {
+        console.log(error);
+        return Promise.reject(null);
+    }
+}
 
 module.exports = {
     createFile,
@@ -288,5 +306,6 @@ module.exports = {
     updateFileSharing,
     findAllFiles,
     removeUserContent,
-    removeUserFromSharedFile
+    removeUserFromSharedFile,
+    writeComment
 }

@@ -21,8 +21,13 @@ let Comment = mongoose.Schema({
         type: String,
         default: "comment"
     },
+    fileId: {
+        type: mongoose.Schema.Types.ObjectId,
+        require: true
+    },
     fileName: {
-        type: String
+        type: String,
+        require: true
     }
 })
 

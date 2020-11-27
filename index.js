@@ -27,12 +27,16 @@ app.set('view engine', 'handlebars');
 app.set('views', 'src/views');
 
 app.use(cors());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
 app.use(bodyParser.json());
 
 
 app.get('/', (req, res) => {
-    res.render('api', { dbstatus: dbStates[db.connection.readyState] });
+    res.render('api', {
+        dbstatus: dbStates[db.connection.readyState]
+    });
 })
 
 app.get('/sockets', (req, res) => {
@@ -40,7 +44,9 @@ app.get('/sockets', (req, res) => {
 });
 
 app.get('/api', (req, res) => {
-    res.render('api', { dbstatus: dbStates[db.connection.readyState] });
+    res.render('api', {
+        dbstatus: dbStates[db.connection.readyState]
+    });
 });
 
 
@@ -106,9 +112,12 @@ io.on('connection', socket => {
         }
         console.log()
 
-        const emitter = (file.owner.id==userId)? file.owner: sharedWith
-          .map(user=>({email:user.email, id: user.userId}))
-          .find(user=>user.id==userId);
+        const emitter = (file.owner.id == userId) ? file.owner : sharedWith
+            .map(user => ({
+                email: user.email,
+                id: user.userId
+            }))
+            .find(user => user.id == userId);
 
 
         if (!message) return;
@@ -118,23 +127,80 @@ io.on('connection', socket => {
                 userSocket = socketUtils.getSocketIdFromUser(user.userId);
 
                 if (userSocket) {
-                    socket.to(userSocket).emit('notification', { message, file, emitter, type });
+                    socket.to(userSocket).emit('notification', {
+                        message,
+                        file,
+                        emitter,
+                        type
+                    });
                 }
             })
-            if(emitter.id != file.owner.id) {
+            if (emitter.id != file.owner.id) {
                 await notificationUtils.generateNotification(file.owner.id, message, file, emitter);
 
                 userSocket = socketUtils.getSocketIdFromUser(file.owner.id);
                 if (userSocket) {
-                    socket.to(userSocket).emit('notification', { message, file, type });
+                    socket.to(userSocket).emit('notification', {
+                        message,
+                        file,
+                        type
+                    });
                 }
             }
         } catch (error) {
             console.log(error);
-            socket.emit("notificationError", { error: "Could not create notification for " + message })
+            socket.emit("notificationError", {
+                error: "Could not create notification for " + message
+            })
         }
     })
 
+    socket.on('comment', async data => {
+        let file = data.file;
+        let message = data.body;
+        let sharedWith = file.sharedWith;
+
+        const emitter = (file.owner.id == userId) ? file.owner : file.sharedWith
+            .map(user => ({
+                email: user.email,
+                id: user.userId
+            }))
+            .find(user => user.id == userId);
+        
+        try {
+            let comment = await fileUtils.writeComment(file, emitter, message);
+            sharedWith.forEach(async user => {
+                await notificationUtils.generateNotification(user.userId, message, file, emitter);
+                userSocket = socketUtils.getSocketIdFromUser(user.userId);
+
+                if (userSocket) {
+                    socket.to(userSocket).emit('notification', {
+                        message: 'commented file',
+                        file,
+                        emitter,
+                        type: 'comment'
+                    });
+                    socket.to(userSocket).emit('comment', comment);
+                }
+            })
+            if (emitter.id != file.owner.id) {
+                await notificationUtils.generateNotification(file.owner.id, message, file, emitter);
+
+                userSocket = socketUtils.getSocketIdFromUser(file.owner.id);
+                if (userSocket) {
+                    socket.to(userSocket).emit('notification', {
+                        message: 'commented file',
+                        file,
+                        emitter,
+                        type: 'comment'
+                    });
+                    socket.to(userSocket).emit('comment', comment);
+                }
+            }
+        } catch (error) {
+            
+        }
+    })
 
 
 });
