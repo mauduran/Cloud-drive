@@ -105,6 +105,25 @@ io.on('connection', socket => {
 
     })
 
+    socket.on('newVersion', async data => {
+        let file = data.file;
+        let sharedWith = data.file.sharedWith;
+        try {
+            
+            sharedWith.forEach(async user => {
+                await notificationUtils.generateNotification(user.userId, "Updated file", file);
+                userSocket = socketUtils.getSocketIdFromUser(user.userId);
+                
+                if(userSocket) {
+                    socket.to(userSocket).emit('notification', {message:'File updated', file:file});
+                }
+            })
+        } catch (error) {
+            console.log(error);
+            socket.emit("shareError", {error: "Could not share file with people."})
+        }
+    })
+
 
     // socket.on('likedNews', data => {
     //   console.log('User liked news: ', data);
