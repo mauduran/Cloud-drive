@@ -81,55 +81,48 @@ io.on('connection', socket => {
         console.log('Client disconnected');
     });
 
-    socket.on('shareFile', async data => {
-        
-        const {sharedWith, file} = data;
-
-        console.log("Archivo compartido")
-
-        try {
-            await fileUtils.updaterFileSharing(file._id, userId, sharedWith);
-            
-            sharedWith.forEach(async user => {
-                await notificationUtils.generateNotification(user.userId, "Shared file", file);
-                userSocket = socketUtils.getSocketIdFromUser(user.userId);
-
-                if(userSocket) {
-                    socket.to(userSocket).emit('notification', {message: "File shared", file: file})
-                }
-            })
-        } catch (error) {
-            console.log(error);
-            socket.emit("shareError", {error: "Could not share file with people."})
-        }
-
-    })
-
-    socket.on('newVersion', async data => {
+    socket.on('notification', async data => {
         let file = data.file;
         let sharedWith = data.file.sharedWith;
+        let type = data.type;
+        let message = '';
+        switch (type) {
+            case 'share':
+                message = 'shared file';
+                await fileUtils.updaterFileSharing(file._id, userId, sharedWith);
+                break;
+            case 'update':
+                message = 'updated file';
+                break;
+            case 'delete':
+                message = 'deleted file';
+                break;
+            case 'verify':
+                message = 'change verification on file';
+                break;
+            default:
+                return;
+        }
+        // console.log(message)
+        console.log(data)
         try {
-            
             sharedWith.forEach(async user => {
-                await notificationUtils.generateNotification(user.userId, "Updated file", file);
+                console.log('Usuario a compartir: ')
+                console.log(user)
+                await notificationUtils.generateNotification(user.userId, message, file);
                 userSocket = socketUtils.getSocketIdFromUser(user.userId);
                 
                 if(userSocket) {
-                    socket.to(userSocket).emit('notification', {message:'File updated', file:file});
+                    console.log(userSocket)
+                    socket.to(userSocket).emit('notification', {message, file:file});
                 }
             })
         } catch (error) {
             console.log(error);
-            socket.emit("shareError", {error: "Could not share file with people."})
+            socket.emit("notificationError", {error: "Could not create notification for " + message})
         }
     })
 
 
-    // socket.on('likedNews', data => {
-    //   console.log('User liked news: ', data);
-
-    //   // io.emit('likedNews', data);
-    //   socket.broadcast.emit('likedNews', {...data, user: userName});
-    // })
 
 });
