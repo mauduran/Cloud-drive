@@ -1,11 +1,12 @@
 const UserSchema = require('../models/user.model');
 
-const generateNotification = async (userId, message, file) => {
+const generateNotification = async (userId, message, file, emitter) => {
+    console.log(emitter);
     let newNotification = {
         fileId: file._id,
         message: message,
-        emitterEmail: file.owner.email,
-        emitterUserId: file.owner.id,
+        emitterEmail: emitter.email,
+        emitterUserId: emitter.id,
         fileName: file.fileName
     }
 
@@ -22,11 +23,23 @@ const deleteNotification = async( userId, notificationId) =>{
         const res = await UserSchema.findByIdAndUpdate(userId, {$pull: {notifications:{ _id: notificationId} }});
         return Promise.resolve(true);
     } catch (error) {
+        console.log(error);
+        return Promise.reject(false); 
+    }
+}
+
+const deleteAllNotifications = async(userId) => {
+    try {
+        const res = await UserSchema.findByIdAndUpdate(userId, {notifications:[]});
+        return Promise.resolve(true);
+    } catch (error) {
+        console.log(error);
         return Promise.reject(false); 
     }
 }
 
 module.exports = {
     generateNotification,
-    deleteNotification
+    deleteNotification,
+    deleteAllNotifications
 }

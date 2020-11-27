@@ -29,7 +29,7 @@ router.route('/existDirectory')
 .get(auth, fileController.getDirectory)
 
 router.route('/deleteFile/:id')
-.delete(auth, fileController.deleteFileByPath)
+.delete(auth, fileController.deleteFile)
 
 router.route('/updateVerificationStatus')
 .post(fileController.updateVerificationStatus);

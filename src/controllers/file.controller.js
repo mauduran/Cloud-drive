@@ -211,23 +211,8 @@ const downloadFile = async (req, res) => {
     }
 }
 
+
 const deleteFile = async (req, res) => {
-    const { id } = req.params;
-
-    if (!id) res.status(400).json({ error: true, message: 'Missing file id' });
-    // This should be substituted with auth middleware
-    // if(!owner) return res.status(400).json({error: true, message: "Missing required fields"});
-
-    try {
-        await fileUtils.removeFile(id);
-        res.json("File successfully removed");
-    } catch (error) {
-        console.log(error);
-        res.status(500).json({ error: true, message: "Unexpected Error" });
-    }
-}
-
-const deleteFileByPath = async (req, res) => {
     let { id } = req.params;
 
     let user = req._user;
@@ -316,7 +301,6 @@ module.exports = {
     createFile,
     getFiles,
     createDirectory,
-    deleteFile,
     deleteDirectory,
     updateFile,
     getFile,
@@ -324,7 +308,7 @@ module.exports = {
     getSharedFiles,
     getPendingFiles,
     getDirectory,
-    deleteFileByPath,
+    deleteFile,
     updateVerificationStatus,
     getVersionsByFile
 }

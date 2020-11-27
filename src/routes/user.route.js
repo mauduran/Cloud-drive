@@ -249,7 +249,8 @@ router.route('/getProfileInfo')
 
 
 router.route('/notifications')
-    .get(authMiddleware, userController.getNotifications);
+    .get(authMiddleware, userController.getNotifications)
+    .delete(authMiddleware, userController.deleteAllNotifications);
 
 router.route('/notifications/:id')
     .delete(authMiddleware, userController.deleteNotification);

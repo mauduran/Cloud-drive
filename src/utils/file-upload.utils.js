@@ -63,7 +63,7 @@ const download = (key) => {
 
 const deleteMany = (arrayKeys) => {
     const params = {
-        Bucket : process.env.AWS_S3_BUCKET,
+        Bucket : process.env.AWS_S3_FILE_BUCKET,
         Delete : {
             Objects : arrayKeys,
             Quiet : false

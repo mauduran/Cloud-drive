@@ -423,8 +423,20 @@ const deleteNotification = async (req, res)=> {
         console.log(error);
         return res.status(400).json({ error: true, message: error });
     }
-
 }
+
+
+const deleteAllNotifications = async (req, res)=> {
+    let id = req._user._id;
+    try {
+        const result = await notificationUtils.deleteAllNotifications(id);
+        return res.status(200).json(result);
+    } catch (error) {
+        console.log(error);
+        return res.status(400).json({ error: true, message: error });
+    }
+}
+
 module.exports = {
     createUser,
     getUser,
@@ -439,5 +451,6 @@ module.exports = {
     logOut,
     updatePhotoByUser,
     getNotifications,
-    deleteNotification
+    deleteNotification,
+    deleteAllNotifications
 }
