@@ -202,5 +202,51 @@ io.on('connection', socket => {
         }
     })
 
+    socket.on('deleteComment', async data => {
+        console.log('delete Comment;');
+        let file = data.file;
 
+        let fileId = file._id;
+        let sharedWith = file.sharedWith;
+
+        let senderId = data.comment.senderId;
+        let commentId = data.comment._id;
+        let userId = data.userId;
+        let message = 'deleted comment';
+        let type = data.type;
+        let newComment;
+        let commentBody = data.comment.body;
+        try {
+            newComment = await fileUtils.deleteComment(fileId, commentId, commentBody);
+            sharedWith.forEach(async user => {
+                await notificationUtils.generateNotification(user.userId, message, file, userId);
+                let userSocket = socketUtils.getSocketIdFromUser(user.userId);
+
+                if (userSocket) {
+                    socket.to(userSocket).emit('notification', {
+                        message: message,
+                        file,
+                        emitter: userId,
+                        type
+                    });
+                    io.to(userSocket).emit('deleteComment', newComment);
+                }
+            })
+            if (userId != file.owner.id) {
+                await notificationUtils.generateNotification(file.owner.id, message, file, userId);
+
+                userSocket = socketUtils.getSocketIdFromUser(file.owner.id);
+                if (userSocket) {
+                    socket.to(userSocket).emit('notification', {
+                        message,
+                        file,
+                        type
+                    });
+                    io.to(userSocket).emit('deleteComment', newComment);
+                }
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    })
 });

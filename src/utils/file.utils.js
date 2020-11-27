@@ -285,6 +285,25 @@ const writeComment = async (file, emitter, message) => {
     }
 }
 
+const deleteComment = async (fileId, commentId, commentBody) => {
+    try {
+        // const rest = await FileSchema.findOneAndUpdate({_id:fileId, "comments._id":commentId}, { $set:{"comments.$[el].value":"deleted comment"}}, 
+        // {arrayFilters: [{ "el.body":  commentBody}], new: true})
+        const rest = await FileSchema.findOne({_id:fileId, "comments._id":commentId}, 
+        {arrayFilters: [{ "el.body":  commentBody}], new: true})
+        console.log(rest);
+        // console.log('Mi comentario (Hi):')
+        // const rest = await FileSchema.findOne({"comments._id":commentId});
+        // console.log(rest);
+        // return;
+        // const rest = await FileSchema.findOneAndUpdate({_id:fileId, "comments._id":commentId}, {"comments.body":"deleted comment"}, {new:true})
+        return Promise.resolve(rest)
+    } catch (error) {
+        console.log(error);
+        return Promise.reject(null);
+    }
+}
+
 module.exports = {
     createFile,
     createDirectory,
@@ -306,5 +325,6 @@ module.exports = {
     findAllFiles,
     removeUserContent,
     removeUserFromSharedFile,
-    writeComment
+    writeComment,
+    deleteComment
 }
