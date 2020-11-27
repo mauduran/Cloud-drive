@@ -4,9 +4,6 @@ const authMiddleware = require("../middlewares/auth.middleware");
 const fileUpload = require('../utils/file-upload.utils')
 const s3uploadImage = fileUpload.uploadImage.single('file');
 
-var multer  = require('multer')
-var upload = multer();
-
 
 const router = express.Router();
 
@@ -33,7 +30,8 @@ const router = express.Router();
  *        description: Unexpected error. 
  */
 router.route('/')
-    .get(authMiddleware, userController.getUsers);
+    .get(authMiddleware, userController.getUsers)
+    .delete(authMiddleware, userController.deleteUser);
 
 // router.route('/getUser')
 //     .get(userController.getUser);

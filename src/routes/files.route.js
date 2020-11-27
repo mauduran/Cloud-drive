@@ -41,7 +41,6 @@ router.route('/test')
     .post((req, res) => {
         s3upload(req, res, (err) => {
             if (err) return res.status(401).json(err);
-            console.log(req.body);
             return res.json('al cien');
         })
     })

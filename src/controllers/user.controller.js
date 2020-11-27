@@ -3,7 +3,10 @@ const UserSchema = require('../models/user.model');
 const TokenSchema = require('../models/tokens.model');
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const userUtils = require('../utils/user.utils')
+const userUtils = require('../utils/user.utils');
+const fileUtils = require('../utils/file.utils');
+const FileSchema = require('../models/file.model');
+const fileUploadUtils = require('../utils/file-upload.utils');
 const notificationUtils = require('../utils/notification.utils');
 require('dotenv').config();
 
@@ -184,15 +187,22 @@ let logOut = async function (req, res) {
 
 }
 
-let deleteUser = function (req, res) {
-    let {
-        email
-    } = req.body;
+let deleteUser = async (req, res) => {
+    const userId = req._user._id;
 
-    if (!email) return res.status(400).json({
-        error: true,
-        message: "Missing required fields"
-    });
+    try {
+        await UserSchema.findByIdAndDelete(userId);
+        const content = await fileUtils.findAllFiles(userId);
+        const awsKeys = content.files.map(file => ({Key: file.storageId}));
+        await fileUtils.removeUserContent(userId);
+        await fileUploadUtils.deleteMany(awsKeys);
+        await fileUtils.removeUserFromSharedFile(userId);
+        return res.status(200).json("Deleted");
+        
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({error: true, message: "Could not process request"});
+    }
 
     UserSchema.deleteOne({
         email
@@ -416,7 +426,6 @@ const deleteNotification = async (req, res)=> {
     let {id} = req.params;
     if(!id) return res.status(400).json({ error: true, message: "Missing notification ID" });
     try {
-        console.log
         const result = await notificationUtils.deleteNotification(_userId, id);
         return res.status(200).json(result);
     } catch (error) {

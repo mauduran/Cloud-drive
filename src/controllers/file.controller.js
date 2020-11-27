@@ -133,7 +133,7 @@ const getVersionsByFile = async (req, res) => {
     try {
         let file = await fileUtils.findFileById(id, user._id)
 
-        let files = await fileUtils.findAllVersionsByFile(file[0].path, file[0].fileName, file[0].owner.id); 
+        let files = await fileUtils.findAllVersionsOfFile(file[0].path, file[0].fileName, file[0].owner.id); 
 
         if(!files) return res.status(500);
         let versions = files.map(file => ({id : file._id, date : file.dateOfCreation, version : file.version, status: file.status, versionWithNumber: 'Version ' + file.version}));

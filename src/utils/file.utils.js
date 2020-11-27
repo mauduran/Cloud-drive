@@ -3,7 +3,17 @@ const fileConstants = require('../constants/file.constants');
 
 var mongoose = require('mongoose');
 
-
+const removeUserFromSharedFile = async (userId) => {
+    console.log(userId);
+    try {
+       const sharedWithMe = await FileSchema.find({"sharedWith.userId":userId});
+       console.log(sharedWithMe); 
+       await FileSchema.updateMany({"sharedWith.userId":userId}, {$pull: {sharedWith:{ userId: userId} }});
+        return Promise.resolve(true);
+    } catch (error) {
+        return Promise.reject(false);
+    }
+}
 
 const createFile = async (fileData) => {
     let newFile = {
@@ -83,6 +93,26 @@ const findFiles = async (owner, path) => {
     }
 }
 
+const findAllFiles = async (owner) => {
+        try {
+        const files = await FileSchema.find({ "owner.id": owner, isDirectory: false });
+        const folders = await FileSchema.find({ "owner.id": owner, isDirectory: true });
+        return Promise.resolve({ files, folders });
+    } catch (error) {
+        return Promise.reject(error);
+    }
+}
+
+const removeUserContent = async (owner) => {
+    try {
+        await FileSchema.deleteMany({"owner.id": owner});
+        return Promise.resolve(true);
+    } catch (error) {
+        return Promise.reject(false);
+        
+    }
+}
+
 const findSharedFiles = async (user, path) => {
     try {
         let files = await FileSchema.find({ "sharedWith.userId": user._id, status: fileConstants.STATUS_TYPES.ACTIVE, isDirectory: false });
@@ -123,7 +153,7 @@ const findAllVersionsFileAndDelete = async (path, fileName, owner) => {
     }
 }
 
-const findAllVersionsByFile = async (path, fileName, owner) => {
+const findAllVersionsOfFile = async (path, fileName, owner) => {
     try {
         const files = await FileSchema.find({path, fileName, "owner.id": owner});
         if(files) return Promise.resolve(files);
@@ -226,7 +256,7 @@ const updateVerificationStatus= async (id, status) => {
     }
 }
 
-const updaterFileSharing = async (fileId, ownerId, sharedWith) => {
+const updateFileSharing = async (fileId, ownerId, sharedWith) => {
     try {
         const response = await FileSchema.findOneAndUpdate({_id: fileId, "owner.id": ownerId}, {sharedWith});
         if(response) return Promise.resolve(true);
@@ -236,6 +266,7 @@ const updaterFileSharing = async (fileId, ownerId, sharedWith) => {
         return Promise.reject(false);
     }
 }
+
 
 module.exports = {
     createFile,
@@ -253,6 +284,9 @@ module.exports = {
     createNewVersionOfFile,
     changeFileToInactive,
     updateVerificationStatus,
-    findAllVersionsByFile,
-    updaterFileSharing
+    findAllVersionsOfFile,
+    updateFileSharing,
+    findAllFiles,
+    removeUserContent,
+    removeUserFromSharedFile
 }

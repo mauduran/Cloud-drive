@@ -83,13 +83,14 @@ io.on('connection', socket => {
 
     socket.on('notification', async data => {
         let file = data.file;
-        let sharedWith = data.file.sharedWith;
+        let sharedWith = data.sharedWith;
         let type = data.type;
         let message = '';
+
         switch (type) {
             case 'share':
                 message = 'shared file';
-                await fileUtils.updaterFileSharing(file._id, userId, sharedWith);
+                await fileUtils.updateFileSharing(file._id, file.owner.id, sharedWith);
                 break;
             case 'update':
                 message = 'updated file';
@@ -103,13 +104,12 @@ io.on('connection', socket => {
             default:
                 break;
         }
-
+        console.log()
 
         const emitter = (file.owner.id==userId)? file.owner: sharedWith
           .map(user=>({email:user.email, id: user.userId}))
           .find(user=>user.id==userId);
 
-        console.log(emitter)
 
         if (!message) return;
         try {
@@ -122,7 +122,6 @@ io.on('connection', socket => {
                 }
             })
             if(emitter.id != file.owner.id) {
-                console.log("notif al owner")
                 await notificationUtils.generateNotification(file.owner.id, message, file, emitter);
 
                 userSocket = socketUtils.getSocketIdFromUser(file.owner.id);
