@@ -203,47 +203,51 @@ io.on('connection', socket => {
     })
 
     socket.on('deleteComment', async data => {
-        console.log('delete Comment;');
         let file = data.file;
 
         let fileId = file._id;
         let sharedWith = file.sharedWith;
 
-        let senderId = data.comment.senderId;
         let commentId = data.comment._id;
         let userId = data.userId;
         let message = 'deleted comment';
         let type = data.type;
-        let newComment;
-        let commentBody = data.comment.body;
+
+        const emitter = (file.owner.id == userId) ? file.owner : file.sharedWith
+        .map(user => ({
+            email: user.email,
+            id: user.userId
+        }))
+        .find(user => user.id == userId);
         try {
-            newComment = await fileUtils.deleteComment(fileId, commentId, commentBody);
+            let newComment = await fileUtils.deleteComment(fileId, commentId);
             sharedWith.forEach(async user => {
-                await notificationUtils.generateNotification(user.userId, message, file, userId);
+                await notificationUtils.generateNotification(user.userId, message, file, emitter);
                 let userSocket = socketUtils.getSocketIdFromUser(user.userId);
 
                 if (userSocket) {
                     socket.to(userSocket).emit('notification', {
                         message: message,
                         file,
-                        emitter: userId,
+                        emitter: emitter,
                         type
                     });
                     io.to(userSocket).emit('deleteComment', newComment);
                 }
             })
-            if (userId != file.owner.id) {
-                await notificationUtils.generateNotification(file.owner.id, message, file, userId);
 
-                userSocket = socketUtils.getSocketIdFromUser(file.owner.id);
-                if (userSocket) {
+            let userSocket = socketUtils.getSocketIdFromUser(file.owner.id);
+            if (userSocket) {
+                if (emitter.id != file.owner.id) {
+                    await notificationUtils.generateNotification(file.owner.id, message, file, emitter);
                     socket.to(userSocket).emit('notification', {
-                        message,
+                        message: message,
                         file,
+                        emitter,
                         type
                     });
-                    io.to(userSocket).emit('deleteComment', newComment);
                 }
+                io.to(userSocket).emit('deleteComment', newComment);
             }
         } catch (error) {
             console.log(error);
