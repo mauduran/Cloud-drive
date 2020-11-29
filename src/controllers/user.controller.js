@@ -117,7 +117,9 @@ let deleteUser = async (req, res) => {
         const content = await fileUtils.findAllFiles(userId);
         const awsKeys = content.files.map(file => ({Key: file.storageId}));
         await fileUtils.removeUserContent(userId);
-        await fileUploadUtils.deleteMany(awsKeys);
+        if(awsKeys.length){
+            await fileUploadUtils.deleteMany(awsKeys);
+        }
         await fileUtils.removeUserFromSharedFile(userId);
         return res.status(200).json("Deleted");
         
@@ -339,14 +341,14 @@ let changeName = function (req, res) {
 const updateUserProfilePic = async (req, res) => {
     let { fileName, storageName } = req.body;
     let owner = { id: req._user._id};
-    let loc = req.file.location;
     
     if (!fileName || !storageName || !owner) return res.status(400).json({ error: true, message: "Missing required fields" });
+    let loc = req.file.location;
 
     try {
-        const result = await userUtils.updateUserProfilePicId(owner.id, loc);
+        await userUtils.updateUserProfilePicId(owner.id, loc);
         
-        return res.status(200).json(result);
+        return res.status(200).json({message: "Profile Pic successfully changed"});
 
     } catch (error) {
         console.log(error);
