@@ -110,10 +110,10 @@ let updateUser = function (req, res) {
                     email: user.email
                 }, changes, function (req, res) { });
                 res.status(200).send({
-                    message: 'Image updated!'
+                    message: 'User updated!'
                 });
             } else {
-                res.status(200).json({
+                res.status(404).json({
                     message: 'User not found!'
                 });
             }
@@ -264,7 +264,7 @@ let googleLogin = function (req, res) {
                     tokenNew.save((err) => {
                         if (err) {
                             console.log(err)
-                            return res.status(401).json("Unexpected Error!")
+                            return res.status(500).json("Unexpected Error!")
                         } else {
                             return res.json(tokenObject);
                         }
@@ -397,7 +397,7 @@ const updatePhotoByUser = async (req, res) => {
     let { fileName, storageName } = req.body;
     let owner = { id: req._user._id, email: req._user.email };
     let loc = req.file.location;
-    
+    console.log(req.file);
     if (!fileName || !storageName || !owner) return res.status(400).json({ error: true, message: "Missing required fields" });
 
     try {
