@@ -365,11 +365,11 @@ const deleteNotification = async (req, res)=> {
     let {id} = req.params;
     if(!id) return res.status(400).json({ error: true, message: "Missing notification ID" });
     try {
-        const result = await notificationUtils.deleteNotification(_userId, id);
-        return res.status(200).json(result);
+        await notificationUtils.deleteNotification(_userId, id);
+        return res.status(200).json({message: "Notification Successfully deleted", notificationId: id});
     } catch (error) {
         console.log(error);
-        return res.status(400).json({ error: true, message: error });
+        return res.status(404).json({ error: true, message: "Notification not found" });
     }
 }
 
