@@ -158,7 +158,7 @@ router.route('/register')
  *        description: Not found
  */
 router.route('/changePassword')
-    .post(userController.changePassword);
+    .post(authMiddleware, userController.changePassword);
 
 /**
  * @swagger

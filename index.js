@@ -110,7 +110,6 @@ io.on('connection', socket => {
             default:
                 break;
         }
-        console.log()
 
         const emitter = (file.owner.id == userId) ? file.owner : sharedWith
             .map(user => ({
