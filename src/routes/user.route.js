@@ -237,58 +237,6 @@ router.route('/changePassword')
 
 /**
  * @swagger
- * /api/users/update:
- *  post:
- *    description: Update account name and imageUrl. Requires authorization
- *    tags: [Users]
- *    parameters:
- *      - in: header
- *        name: Authorization
- *        description: User token
- *        schema:
- *          type: string
- *          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImlwYW5jaGl0b0BpdGVzby5teCIsImlhdCI6MTYwNjU0NTIzMn0.r-7mMWw6lLByTfcJcKOofd8KUnFbQaATjn8i0XOm2t4 
- *        required: true
- *    requestBody:
- *      description: Requires name, email, imageUrl.
- *      required: true
- *      content:
- *        application/json:
- *          schema:
- *            type: object
- *            required:
- *              - email
- *              - currentPassword
- *              - newPassword
- *            properties:
- *              email:
- *                type: String
- *                description: Email to change password
- *                example: t@tgmail.com   
- *              name:
- *                type: String
- *                description: New name
- *                example: password   
- *              imageUrl:
- *                type: string
- *                description: New image url
- *                example: newPass            
- *    responses: 
- *      "200":
- *        description: User updated!
- *      "400":
- *        description: Invalid request entered.
- *      "404": 
- *        description: User not found!
- */
-
-
-router.route('/update')
-    .post(authMiddleware, userController.updateUser);
-
-
-/**
- * @swagger
  * /api/users/delete:
  *  delete:
  *    description: Delete user
