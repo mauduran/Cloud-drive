@@ -313,6 +313,9 @@ let changeName = function (req, res) {
     let newName = req.body.newName;
     let owner = req._user._id;
 
+    if(!newName){
+        res.status(400).json({error: true, message: "Missing fields"})
+    }
     UserSchema.findById(owner)
         .then(user => {
             if (user) {
@@ -325,6 +328,7 @@ let changeName = function (req, res) {
                 }).then(res.status(200).json({ message: "Name changed successfully!" }));
             } else {
                 res.status(404).json({
+                    error: true,
                     message: "User not found!"
                 })
             }
@@ -335,48 +339,6 @@ let changeName = function (req, res) {
         });
 }
 
-let updateUser = function (req, res) {
-    let {
-        name,
-        email,
-        imageUrl
-    } = req.body;
-
-    if (!email) return res.status(400).json({
-        error: true,
-        message: "Missing required fields"
-    });
-
-    let changes = {}
-
-    if (name) changes.name = name;
-    if (imageUrl) changes.imageUrl = imageUrl;
-
-
-    UserSchema.findOne({
-        email
-    })
-        .then(user => {
-            if (user) {
-                UserSchema.findOneAndUpdate({
-                    email: user.email
-                }, changes, function (req, res) { });
-                res.status(200).send({
-                    message: 'Image updated!'
-                });
-            } else {
-                res.status(200).json({
-                    message: 'User not found!'
-                });
-            }
-        })
-        .catch(err => {
-            console.log(err);
-            //res.status(500).send({message : 'Server error.', error : `${err}`});
-            res.status(400).json(error);
-
-        })
-}
 
 const updateUserProfilePic = async (req, res) => {
     let { fileName, storageName } = req.body;
@@ -435,7 +397,6 @@ const deleteAllNotifications = async (req, res)=> {
 module.exports = {
     createUser,
     getUser,
-    updateUser,
     getUsers,
     deleteUser,
     login,

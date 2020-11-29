@@ -32,6 +32,7 @@ const router = express.Router();
 router.route('/')
     .get(authMiddleware, userController.getUsers)
     .delete(authMiddleware, userController.deleteUser);
+    // .put(userController.updateUser)
 
 // router.route('/getUser')
 //     .get(userController.getUser);
@@ -222,21 +223,11 @@ router.route('/changePassword')
  *        description: Could not find user by that id
  */
 
-/*
-router.route('/:id')
-    .get(userController.getUser)
-    .put(userController.updateUser)
-    .delete(userController.deleteUser);
-*/
-
-router.route('/update')
-    .post(authMiddleware, userController.updateUser);
-
 router.route('/delete')
     .delete(authMiddleware, userController.deleteUser);
 
 router.route('/changeName')
-    .post(authMiddleware, userController.changeName);
+    .put(authMiddleware, userController.changeName);
 
 
 // router.route('/getUser')
