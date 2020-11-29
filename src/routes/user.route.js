@@ -255,7 +255,7 @@ router.route('/notifications/:id')
 
 
 router.route('/updateImage')
-.put(authMiddleware, s3uploadImage, userController.updatePhotoByUser)
+.put(authMiddleware, s3uploadImage, userController.updateUserProfilePic)
 
 module.exports = router;
 

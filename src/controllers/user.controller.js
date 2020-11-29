@@ -180,9 +180,9 @@ let logOut = async function (req, res) {
     let token = req.headers.authorization;
     try {
         await TokenSchema.deleteOne({ token })
-        res.json({ message: "Logout successfull" });
+        res.json({ error: false, message: "Logout successful" });
     } catch (error) {
-        res.json({ message: "Token did not exist" })
+        res.status(400).json({ error: true, message: "Token did not exist" })
     }
 
 }
@@ -393,7 +393,7 @@ let changeName = function (req, res) {
 }
 
 
-const updatePhotoByUser = async (req, res) => {
+const updateUserProfilePic = async (req, res) => {
     let { fileName, storageName } = req.body;
     let owner = { id: req._user._id, email: req._user.email };
     let loc = req.file.location;
@@ -401,7 +401,7 @@ const updatePhotoByUser = async (req, res) => {
     if (!fileName || !storageName || !owner) return res.status(400).json({ error: true, message: "Missing required fields" });
 
     try {
-        const result = await userUtils.updatePhotoByUserId(owner.id, loc);
+        const result = await userUtils.updateUserProfilePicId(owner.id, loc);
         
         return res.status(200).json(result);
 
@@ -458,7 +458,7 @@ module.exports = {
     changeName,
     getProfileInfo,
     logOut,
-    updatePhotoByUser,
+    updateUserProfilePic,
     getNotifications,
     deleteNotification,
     deleteAllNotifications
