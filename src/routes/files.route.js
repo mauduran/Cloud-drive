@@ -158,8 +158,56 @@ router.route('/download/:id')
 /**
  * @swagger
  * /api/files/sharedFiles :
- *  post:
- *    description: Download file by id
+ *  get:
+ *    description: Get all shared with me files
+ *    tags: [Files]
+ *    parameters:
+ *      - in: header
+ *        name: Authorization
+ *        description: User token
+ *        schema:
+ *          type: string
+ *          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImlwYW5jaGl0b0BpdGVzby5teCIsImlhdCI6MTYwNjU0NTIzMn0.r-7mMWw6lLByTfcJcKOofd8KUnFbQaATjn8i0XOm2t4 
+ *        required: true      
+ *    responses: 
+ *      "200":
+ *        description: Object with array of sharedWithMe files like attribute
+ *      "401": 
+ *        description: Invalid Token!
+ */
+router.route('/sharedFiles')
+.get(auth, fileController.getSharedFiles)
+
+
+/**
+ * @swagger
+ * /api/files/pendingFiles :
+ *  get:
+ *    description: Get all pending files to verify
+ *    tags: [Files]
+ *    parameters:
+ *      - in: header
+ *        name: Authorization
+ *        description: User token
+ *        schema:
+ *          type: string
+ *          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImlwYW5jaGl0b0BpdGVzby5teCIsImlhdCI6MTYwNjU0NTIzMn0.r-7mMWw6lLByTfcJcKOofd8KUnFbQaATjn8i0XOm2t4 
+ *        required: true      
+ *    responses: 
+ *      "200":
+ *        description: Object with array of pending files like attribute
+ *      "401": 
+ *        description: Invalid Token!
+ */
+router.route('/pendingFiles')
+.get(auth, fileController.getPendingFiles)
+
+
+/**
+ * @swagger
+ * /api/files/existDirectory :
+ *  get:
+ *    description: Know if a directory exists to move later
  *    tags: [Files]
  *    parameters:
  *      - in: header
@@ -170,38 +218,197 @@ router.route('/download/:id')
  *          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImlwYW5jaGl0b0BpdGVzby5teCIsImlhdCI6MTYwNjU0NTIzMn0.r-7mMWw6lLByTfcJcKOofd8KUnFbQaATjn8i0XOm2t4 
  *        required: true      
  *      - in: query
- *        name: path
- *        description: Search input for email of user
- *        required: false
+ *        name: Path
+ *        description: Path from root
  *        schema:
- *          type: String
- *          example: Anají 
+ *          type: string
+ *          example: "/test/test-inside"
+ *        required: true      
  *    responses: 
- *      "201":
- *        description: Directory successully created
- *      "400": 
- *        description: Missing required fields
- *      "409": 
- *        description: Directory already exists
+ *      "200":
+ *        description: "true"
+ *      "400":
+ *        description: Could not process request.
+ *      "401": 
+ *        description: Invalid Token!
+ *      "404": 
+ *        description: "false"
  */
-router.route('/sharedFiles')
-.get(auth, fileController.getSharedFiles)
-
-router.route('/pendingFiles')
-.get(auth, fileController.getPendingFiles)
 
 router.route('/existDirectory')
 .get(auth, fileController.getDirectory)
 
+/**
+ * @swagger
+ * /api/files/deleteFile/:id :
+ *  delete:
+ *    description: Delete file by fileId
+ *    tags: [Files]
+ *    parameters:
+ *      - in: header
+ *        name: Authorization
+ *        description: User token
+ *        schema:
+ *          type: string
+ *          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImlwYW5jaGl0b0BpdGVzby5teCIsImlhdCI6MTYwNjU0NTIzMn0.r-7mMWw6lLByTfcJcKOofd8KUnFbQaATjn8i0XOm2t4 
+ *        required: true      
+ *      - in: path
+ *        name: id
+ *        description: fileId
+ *        schema:
+ *          type: string
+ *          example: 5fc425ac8212670ca4dee25f
+ *        required: true      
+ *    responses: 
+ *      "200":
+ *        description: "true"
+ *      "400":
+ *        description: Could not process request.
+ *      "401": 
+ *        description: Invalid Token!
+ *      "404": 
+ *        description: "false"
+ */
 router.route('/deleteFile/:id')
 .delete(auth, fileController.deleteFile)
 
+
+/**
+ * @swagger
+ * /api/files/updateVerificationStatus :
+ *  post:
+ *    description: Update verification status of file
+ *    tags: [Files]
+ *    parameters:
+ *      - in: header
+ *        name: Authorization
+ *        description: User token
+ *        schema:
+ *          type: string
+ *          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImlwYW5jaGl0b0BpdGVzby5teCIsImlhdCI6MTYwNjU0NTIzMn0.r-7mMWw6lLByTfcJcKOofd8KUnFbQaATjn8i0XOm2t4 
+ *        required: true      
+ *    requestBody:
+ *      description: Id and status of file
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            required:
+ *              - id
+ *              - status
+ *            properties:
+ *              id:
+ *                type: String
+ *                description: fileId
+ *                example: "5fc425ac8212670ca4dee25f"
+ *              status:
+ *                type: String
+ *                description: New status
+ *                example: "Verified"      
+ *    responses: 
+ *      "200":
+ *        description: File Verification Status Updated
+ *      "400":
+ *        description: missing fields
+ *      "401": 
+ *        description: Invalid Token!
+ */
 router.route('/updateVerificationStatus')
 .post(fileController.updateVerificationStatus);
 
+
+/**
+ * @swagger
+ * /api/files/getVersions/:id :
+ *  get:
+ *    description: Get all versions of file by id
+ *    tags: [Files]
+ *    parameters:
+ *      - in: header
+ *        name: Authorization
+ *        description: User token
+ *        schema:
+ *          type: string
+ *          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImlwYW5jaGl0b0BpdGVzby5teCIsImlhdCI6MTYwNjU0NTIzMn0.r-7mMWw6lLByTfcJcKOofd8KUnFbQaATjn8i0XOm2t4 
+ *        required: true 
+ *      - in: path
+ *        name: id
+ *        description: fileId
+ *        schema:
+ *          type: string
+ *          example: 5fc425ac8212670ca4dee25f
+ *        required: true        
+ *    responses: 
+ *      "200":
+ *        description: Object with array with all versions of file
+ *      "401": 
+ *        description: Invalid Token!
+ *      "500": 
+ *        description: Unexpected Error
+ */
 router.route('/getVersions/:id')
 .get(auth, fileController.getVersionsByFile);
 
+
+/**
+ * @swagger
+ * /api/files/:id :
+ *  post:
+ *    description: Get all versions of file by id
+ *    tags: [Files]
+ *    parameters:
+ *      - in: header
+ *        name: Authorization
+ *        description: User token
+ *        schema:
+ *          type: string
+ *          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImlwYW5jaGl0b0BpdGVzby5teCIsImlhdCI6MTYwNjU0NTIzMn0.r-7mMWw6lLByTfcJcKOofd8KUnFbQaATjn8i0XOm2t4 
+ *        required: true 
+ *      - in: path
+ *        name: id
+ *        description: fileId
+ *        schema:
+ *          type: string
+ *          example: 5fc425ac8212670ca4dee25f
+ *        required: true        
+ *    responses: 
+ *      "200":
+ *        description: Object with array with all versions of file
+ *      "400": 
+ *        description: Could not process request.
+ *      "401": 
+ *        description: Invalid Token!
+ *      "404": 
+ *        description: Could not get access to requested file
+ *  delete:
+ *    description: Delete file by fileId
+ *    tags: [Files]
+ *    parameters:
+ *      - in: header
+ *        name: Authorization
+ *        description: User token
+ *        schema:
+ *          type: string
+ *          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImlwYW5jaGl0b0BpdGVzby5teCIsImlhdCI6MTYwNjU0NTIzMn0.r-7mMWw6lLByTfcJcKOofd8KUnFbQaATjn8i0XOm2t4 
+ *        required: true      
+ *      - in: path
+ *        name: id
+ *        description: fileId
+ *        schema:
+ *          type: string
+ *          example: 5fc425ac8212670ca4dee25f
+ *        required: true      
+ *    responses: 
+ *      "200":
+ *        description: "true"
+ *      "400":
+ *        description: Could not process request.
+ *      "401": 
+ *        description: Invalid Token!
+ *      "404": 
+ *        description: "false"
+ */
 router.route('/:id')
 .get(auth, fileController.getFile)
 .delete(fileController.deleteFile);
