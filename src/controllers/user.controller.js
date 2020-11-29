@@ -9,9 +9,7 @@ const fileUploadUtils = require('../utils/file-upload.utils');
 const notificationUtils = require('../utils/notification.utils');
 require('dotenv').config();
 
-const {
-    OAuth2Client
-} = require('google-auth-library');
+const { OAuth2Client } = require('google-auth-library');
 
 const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID)
 
@@ -49,7 +47,6 @@ let createUser = function (req, res) {
     });
 
 }
-
 
 let login = function (req, res) {
     let {
@@ -338,7 +335,6 @@ let changeName = function (req, res) {
             res.status(400).json(err);
         });
 }
-
 
 const updateUserProfilePic = async (req, res) => {
     let { fileName, storageName } = req.body;

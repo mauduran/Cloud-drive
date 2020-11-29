@@ -245,7 +245,7 @@ router.route('/notifications/:id')
     .delete(authMiddleware, userController.deleteNotification);
 
 
-router.route('/updateImage')
+router.route('/profile-pic')
 .put(authMiddleware, s3uploadImage, userController.updateUserProfilePic)
 
 router.route('/:id')
