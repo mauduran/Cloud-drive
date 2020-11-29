@@ -276,7 +276,7 @@ const writeComment = async (file, emitter, message) => {
             fileId: file._id
         }
         const res = await FileSchema.findByIdAndUpdate(file._id, {$push: {comments: newComment}}, {new:true});
-        console.log(res.comments[res.comments.length - 1]);
+        // console.log(res.comments[res.comments.length - 1]);
         return Promise.resolve(res.comments[res.comments.length - 1]);
 
     } catch (error) {
