@@ -342,7 +342,7 @@ let changeName = function (req, res) {
 
 const updateUserProfilePic = async (req, res) => {
     let { fileName, storageName } = req.body;
-    let owner = { id: req._user._id, email: req._user.email };
+    let owner = { id: req._user._id};
     let loc = req.file.location;
     
     if (!fileName || !storageName || !owner) return res.status(400).json({ error: true, message: "Missing required fields" });
@@ -356,12 +356,6 @@ const updateUserProfilePic = async (req, res) => {
         console.log(error);
         return res.status(400).json({ error: true, message: error });
     }
-}
-
-let signToken = function (email) {
-    return jwt.sign({
-        email
-    }, process.env.TOKEN_SECRET);
 }
 
 const getNotifications = (req, res) => {
@@ -393,6 +387,12 @@ const deleteAllNotifications = async (req, res)=> {
     }
 }
 
+
+let signToken = function (email) {
+    return jwt.sign({
+        email
+    }, process.env.TOKEN_SECRET);
+}
 
 module.exports = {
     createUser,
