@@ -106,7 +106,6 @@ const createDirectory = async (req, res) => {
     }
 }
 
-
 const getFiles = async (req, res) => {
     let { path } = req.query;
 

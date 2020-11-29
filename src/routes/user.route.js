@@ -239,8 +239,8 @@ router.route('/changeName')
     .post(authMiddleware, userController.changeName);
 
 
-router.route('/getUser')
-    .post(authMiddleware, userController.getUser);
+// router.route('/getUser')
+//     .post(authMiddleware, userController.getUser);
 
 router.route('/getProfileInfo')
     .get(authMiddleware, userController.getProfileInfo)
@@ -256,6 +256,9 @@ router.route('/notifications/:id')
 
 router.route('/updateImage')
 .put(authMiddleware, s3uploadImage, userController.updateUserProfilePic)
+
+router.route('/:id')
+    .get(authMiddleware, userController.getUser)
 
 module.exports = router;
 

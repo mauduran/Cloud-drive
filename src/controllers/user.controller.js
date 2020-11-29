@@ -5,7 +5,6 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const userUtils = require('../utils/user.utils');
 const fileUtils = require('../utils/file.utils');
-const FileSchema = require('../models/file.model');
 const fileUploadUtils = require('../utils/file-upload.utils');
 const notificationUtils = require('../utils/notification.utils');
 require('dotenv').config();
@@ -129,18 +128,6 @@ let deleteUser = async (req, res) => {
         console.log(error);
         return res.status(500).json({error: true, message: "Could not process request"});
     }
-
-    UserSchema.deleteOne({
-        email
-    }, function (err) {
-        if (err) console.log(err);
-        else {
-            res.status(200).send({
-                message: 'User removed!',
-                email: email
-            });
-        }
-    })
 }
 
 let googleLogin = function (req, res) {
@@ -289,7 +276,7 @@ let getUsers = function (req, res) {
 }
 
 let getUser = function (req, res) {
-    let id = req.body.id;
+    let id = req.params.id;
     if (!id) return res.status(400).json({
         error: true,
         message: "Missing required fields"
