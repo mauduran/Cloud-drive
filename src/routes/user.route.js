@@ -9,7 +9,7 @@ const router = express.Router();
 
 /**
  * @swagger
- * /users:
+ * /api/users:
  *  get:
  *    description: Get list of all users
  *    tags: [Users]
@@ -51,7 +51,7 @@ router.route('/')
 
 /**
  * @swagger
- * /users/login:              
+ * /api/users/login:              
  *  post:
  *    description: Login into account
  *    tags: [Users]
@@ -64,18 +64,18 @@ router.route('/')
  *            type: object
  *            required: 
  *              - email
- *              - pwd
+ *              - password
  *            properties:
  *              email:
  *                description: Account email
  *                type: string
- *                example: rifas@cloud.com
- *              pwd:
+ *                example: ipanchito@iteso.mx
+ *              password:
  *                description: Password
  *                type: string
- *                example: password                
+ *                example: panchito                
  *    responses: 
- *      "201":
+ *      "200":
  *        description: Login successful.
  *      "400":
  *        description: Missing required fields
@@ -90,7 +90,7 @@ router.route('/login')
 
 /**
  * @swagger
- * /users/login/google:              
+ * /api/users/login/google:              
  *  post:
  *    description: Login into account
  *    tags: [Users]
@@ -122,7 +122,7 @@ router.route('/login/google')
 
 /**
  * @swagger
- * /users/logout:              
+ * /api/users/logout:              
  *  post:
  *    description: Logout my session
  *    tags: [Users]
@@ -135,7 +135,7 @@ router.route('/login/google')
  *          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImlwYW5jaGl0b0BpdGVzby5teCIsImlhdCI6MTYwNjU0NTIzMn0.r-7mMWw6lLByTfcJcKOofd8KUnFbQaATjn8i0XOm2t4 
  *        required: true
  *    responses: 
- *      "201":
+ *      "200":
  *        description: Login successful.
  *      "400":
  *        description: Could not login with google"
@@ -146,7 +146,7 @@ router.route('/logout')
     .post(authMiddleware, userController.logOut);
 /**
  * @swagger
- * /users/register:              
+ * /api/users/register:              
  *  post:
  *    description: Create an account.
  *    tags: [Users]
@@ -160,15 +160,15 @@ router.route('/logout')
  *            required: 
  *              - name
  *              - email
- *              - pwd
+ *              - password
  *            properties:
  *              name:
  *                type: string
  *                example: Mauricio
  *              email:
  *                type: string
- *                example: a@a.com
- *              pwd:
+ *                example: test2@a.com
+ *              password:
  *                type: string
  *                example: password    
  *    responses: 
@@ -187,7 +187,7 @@ router.route('/register')
 
 /**
  * @swagger
- * /users/changePassword:
+ * /api/users/changePassword:
  *  put:
  *    description: Update account password. Requires authorization
  *    tags: [Users]
@@ -236,7 +236,7 @@ router.route('/changePassword')
 
 /**
  * @swagger
- * /users/update:
+ * /api/users/update:
  *  post:
  *    description: Update account name and imageUrl. Requires authorization
  *    tags: [Users]
@@ -288,7 +288,7 @@ router.route('/update')
 
 /**
  * @swagger
- * /users/delete:
+ * /api/users/delete:
  *  delete:
  *    description: Delete user
  *    tags: [Users]
@@ -313,7 +313,7 @@ router.route('/delete')
 
 /**
  * @swagger
- * /users/changeName:
+ * /api/users/changeName:
  *  post:
  *    description: Update account username. Requires authorization
  *    tags: [Users]
@@ -353,24 +353,18 @@ router.route('/changeName')
 
 /**
  * @swagger
- * /users/getUser:
- *  get:
+ * /api/users/getUser:
+ *  post:
  *    description: Get user info
  *    tags: [Users]
- *    requestBody:
- *      description: user id
- *      required: true
- *      content:
- *        application/json:
- *          schema:
- *            type: object
- *            required:
- *              - id
- *            properties:
- *              id:
- *                type: String
- *                description: user id to get user's information
- *                example: 5fb89e5fd6ae52013858274b          
+ *    parameters:
+ *      - in: header
+ *        name: Authorization
+ *        description: User token
+ *        schema:
+ *          type: string
+ *          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImlwYW5jaGl0b0BpdGVzby5teCIsImlhdCI6MTYwNjU0NTIzMn0.r-7mMWw6lLByTfcJcKOofd8KUnFbQaATjn8i0XOm2t4 
+ *        required: true         
  *    responses: 
  *      "200":
  *        description: User found!
@@ -385,17 +379,17 @@ router.route('/getUser')
     
 /**
  * @swagger
- * /users/getProfileInfo:
+ * /api/users/getProfileInfo:
  *  get:
  *    description: Get user info with token
  *    tags: [Users]
  *    parameters:
  *      - in: header
- *        name: Authorization
+ *        name: authorization
  *        description: User token
  *        schema:
  *          type: string
- *          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImlwYW5jaGl0b0BpdGVzby5teCIsImlhdCI6MTYwNjU0NTIzMn0.r-7mMWw6lLByTfcJcKOofd8KUnFbQaATjn8i0XOm2t4 
+ *          example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImlwYW5jaGl0b0BpdGVzby5teCIsImlhdCI6MTYwNjYzODUxNH0.qORzRuFf8WMOB-S-OKUXyb2591cwexn8qpCzFseRcJI"
  *        required: true    
  *    responses: 
  *      "200":
@@ -408,7 +402,7 @@ router.route('/getProfileInfo')
 
 /**
  * @swagger
- * /users/notifications:
+ * /api/users/notifications:
  *  get:
  *    description: Get user notifications
  *    tags: [Users]
@@ -449,7 +443,7 @@ router.route('/notifications')
 
 /**
  * @swagger
- * /users/notifications/:id:
+ * /api/users/notifications/:id:
  *  delete:
  *    description: Delete a user notification by id notification
  *    tags: [Users]
@@ -486,7 +480,7 @@ router.route('/notifications/:id')
 
 /**
  * @swagger
- * /users/updateImage:
+ * /api/users/updateImage:
  *  put:
  *    description: Update a user photo on DB and S3 Bucket
  *    tags: [Users]
