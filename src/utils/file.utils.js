@@ -4,10 +4,8 @@ const fileConstants = require('../constants/file.constants');
 var mongoose = require('mongoose');
 
 const removeUserFromSharedFile = async (userId) => {
-    console.log(userId);
     try {
        const sharedWithMe = await FileSchema.find({"sharedWith.userId":userId});
-       console.log(sharedWithMe); 
        await FileSchema.updateMany({"sharedWith.userId":userId}, {$pull: {sharedWith:{ userId: userId} }});
         return Promise.resolve(true);
     } catch (error) {
@@ -276,7 +274,6 @@ const writeComment = async (file, emitter, message) => {
             fileId: file._id
         }
         const res = await FileSchema.findByIdAndUpdate(file._id, {$push: {comments: newComment}}, {new:true});
-        // console.log(res.comments[res.comments.length - 1]);
         return Promise.resolve(res.comments[res.comments.length - 1]);
 
     } catch (error) {

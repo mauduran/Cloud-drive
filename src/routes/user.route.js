@@ -48,6 +48,7 @@ const router = express.Router();
 router.route('/')
     .get(authMiddleware, userController.getUsers)
     .delete(authMiddleware, userController.deleteUser);
+    // .put(userController.updateUser)
 
 /**
  * @swagger
@@ -232,7 +233,7 @@ router.route('/register')
  *        description: User not found!
  */
 router.route('/changePassword')
-    .post(userController.changePassword);
+    .post(authMiddleware, userController.changePassword);
 
 /**
  * @swagger
@@ -348,33 +349,15 @@ router.route('/delete')
  *        description: User not found!
  */
 
-router.route('/changeName')
-    .post(authMiddleware, userController.changeName);
+router.route('/delete')
+    .delete(authMiddleware, userController.deleteUser);
 
-/**
- * @swagger
- * /api/users/getUser:
- *  post:
- *    description: Get user info
- *    tags: [Users]
- *    parameters:
- *      - in: header
- *        name: Authorization
- *        description: User token
- *        schema:
- *          type: string
- *          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImlwYW5jaGl0b0BpdGVzby5teCIsImlhdCI6MTYwNjU0NTIzMn0.r-7mMWw6lLByTfcJcKOofd8KUnFbQaATjn8i0XOm2t4 
- *        required: true         
- *    responses: 
- *      "200":
- *        description: User found!
- *      "400":
- *        description: Invalid request entered.
- *      "404": 
- *        description: User not found!
- */
-router.route('/getUser')
-    .post(authMiddleware, userController.getUser);
+router.route('/changeName')
+    .put(authMiddleware, userController.changeName);
+
+
+// router.route('/getUser')
+//     .post(authMiddleware, userController.getUser);
 
     
 /**
@@ -480,7 +463,7 @@ router.route('/notifications/:id')
 
 /**
  * @swagger
- * /api/users/updateImage:
+ * /api/users/profile-pic:
  *  put:
  *    description: Update a user photo on DB and S3 Bucket
  *    tags: [Users]
@@ -498,8 +481,12 @@ router.route('/notifications/:id')
  *      "400": 
  *        description: Missing notification ID
  */    
-router.route('/updateImage')
-.put(authMiddleware, s3uploadImage, userController.updatePhotoByUser)
+
+router.route('/profile-pic')
+.put(authMiddleware, s3uploadImage, userController.updateUserProfilePic)
+
+router.route('/:id')
+    .get(authMiddleware, userController.getUser)
 
 module.exports = router;
 

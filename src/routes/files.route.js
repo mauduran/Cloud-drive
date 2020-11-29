@@ -4,6 +4,7 @@ const fileUpload = require('../utils/file-upload.utils')
 const router = express.Router();
 const s3upload = fileUpload.upload.single('file');
 const auth = require('../middlewares/auth.middleware');
+const FileSchema = require('../models/file.model');
 
 /**
  * @swagger
@@ -200,20 +201,6 @@ router.route('/updateVerificationStatus')
 
 router.route('/getVersions/:id')
 .get(auth, fileController.getVersionsByFile);
-
-router.route('/test')
-    .post((req, res) => {
-        s3upload(req, res, (err) => {
-            if (err) return res.status(401).json(err);
-            return res.json('al cien');
-        })
-    })
-    .get((req, res) => {
-        res.attachment("Academic_Ivory_Israel_Arlina_5652.pdf");
-        const fileStream = fileUpload.download('Academic_Ivory_Israel_Arlina_5652.pdf');
-
-        fileStream.pipe(res);
-    })
 
 router.route('/:id')
 .get(auth, fileController.getFile)

@@ -1,6 +1,6 @@
 const UserSchema = require('../models/user.model');
 
-const updatePhotoByUserId = async (id, location) => {
+const updateUserProfilePicId = async (id, location) => {
     try {
         let oldResult = await UserSchema.findByIdAndUpdate(id, { imageUrl : location });
         return Promise.resolve({fileChanged: oldResult});
@@ -12,5 +12,5 @@ const updatePhotoByUserId = async (id, location) => {
 
 
 module.exports = {
-    updatePhotoByUserId
+    updateUserProfilePicId
 }

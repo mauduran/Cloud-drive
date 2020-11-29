@@ -172,7 +172,7 @@ io.on('connection', socket => {
                 let userSocket = socketUtils.getSocketIdFromUser(user.userId);
 
                 if (userSocket) {
-                    socket.to(userSocket).emit('notification', {
+                    io.to(userSocket).emit('notification', {
                         message: 'commented file',
                         file,
                         emitter,
@@ -186,7 +186,7 @@ io.on('connection', socket => {
             if (userSocket) {
                 if (emitter.id != file.owner.id) {
                     await notificationUtils.generateNotification(file.owner.id, message, file, emitter);
-                    socket.to(userSocket).emit('notification', {
+                    io.to(userSocket).emit('notification', {
                         message: 'commented file',
                         file,
                         emitter,
