@@ -219,64 +219,65 @@ let deleteUser = async (req, res) => {
 
 let googleLogin = function (req, res) {
     const id = req.body.id;
+    if(!id) res.status(400).json({error: true, message: "missing id"})
     googleClient.verifyIdToken({
         idToken: id
     })
         .then(googleResponse => {
             const responseData = googleResponse.getPayload();
             const email = responseData.email;
-            UserSchema.findOne({
+            return UserSchema.findOne({
                 email
             })
-                .then(user => {
-                    if (user) {
-                        if (!user.googleId) {
-                            return UserSchema.findOneAndUpdate({
-                                email
-                            }, {
-                                $set: {
-                                    googleId: id
-                                }
-                            })
+        })
+        .then(user => {
+            if (user) {
+                if (!user.googleId) {
+                    return UserSchema.findOneAndUpdate({
+                        email
+                    }, {
+                        $set: {
+                            googleId: id
                         }
-                        return Promise.resolve(user)
-                    } else {
-                        let newUser = {
-                            name: `${responseData.given_name} ${responseData.family_name}`,
-                            googleId: id,
-                            email,
-                            joined: Date.now(),
-                            lastConnection: Date.now(),
-                            sharedWithMe: []
-                        }
-                        let userNew = UserSchema(newUser);
-                        return userNew.save()
-                    }
-                })
-                .then(user => {
-                    const token = signToken(user.email);
-                    const tokenObject = {
-                        userId: user._id,
-                        token
-                    }
+                    })
+                }
+                return Promise.resolve(user)
+            } else {
+                let newUser = {
+                    name: `${responseData.given_name} ${responseData.family_name}`,
+                    googleId: id,
+                    email,
+                    joined: Date.now(),
+                    lastConnection: Date.now(),
+                    sharedWithMe: []
+                }
+                let userNew = UserSchema(newUser);
+                return userNew.save()
+            }
+        })
+        .then(user => {
+            const token = signToken(user.email);
+            const tokenObject = {
+                userId: user._id,
+                token
+            }
 
-                    let tokenNew = TokenSchema(tokenObject);
-                    tokenNew.save((err) => {
-                        if (err) {
-                            console.log(err)
-                            return res.status(401).json("Unexpected Error!")
-                        } else {
-                            return res.json(tokenObject);
-                        }
-                    })
-                })
-                .catch(err => {
+            let tokenNew = TokenSchema(tokenObject);
+            tokenNew.save((err) => {
+                if (err) {
                     console.log(err)
-                    res.status(400).json({
-                        error: true,
-                        message: "Could not login with google"
-                    })
-                })
+                    return res.status(401).json("Unexpected Error!")
+                } else {
+                    return res.json(tokenObject);
+                }
+            })
+        })
+        .catch(err => {
+            console.log(err)
+            res.status(400).json({
+                error: true,
+                message: "Could not login with google"
+            })
         })
 }
 
