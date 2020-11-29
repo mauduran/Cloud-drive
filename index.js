@@ -58,7 +58,6 @@ app.use('/api/users', userRouter);
 
 app.use('/api/files', fileRouter);
 
-
 app.use('/api/filePermissions', fileRouter);
 
 
@@ -92,7 +91,6 @@ io.on('connection', socket => {
         let sharedWith = data.sharedWith;
         let type = data.type;
         let message = '';
-
         switch (type) {
             case 'share':
                 message = 'shared file';
@@ -110,7 +108,6 @@ io.on('connection', socket => {
             default:
                 break;
         }
-        console.log()
 
         const emitter = (file.owner.id == userId) ? file.owner : sharedWith
             .map(user => ({
@@ -121,6 +118,7 @@ io.on('connection', socket => {
 
 
         if (!message) return;
+        // if (!message || sharedWith) return;
         try {
             sharedWith.forEach(async user => {
                 await notificationUtils.generateNotification(user.userId, message, file, emitter);
@@ -205,10 +203,7 @@ io.on('connection', socket => {
     socket.on('deleteComment', async data => {
         let file = data.file;
 
-        let fileId = file._id;
-        let sharedWith = file.sharedWith;
-
-        let commentId = data.comment._id;
+        let fileId = file._id, sharedWith = file.sharedWith, commentId = data.comment._id;
         let userId = data.userId;
         let message = 'deleted comment';
         let type = data.type;
