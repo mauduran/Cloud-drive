@@ -1,7 +1,6 @@
 const UserSchema = require('../models/user.model');
 
 const generateNotification = async (userId, message, file, emitter) => {
-    console.log(emitter);
     let newNotification = {
         fileId: file._id,
         message: message,

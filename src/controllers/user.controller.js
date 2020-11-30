@@ -139,6 +139,7 @@ let googleLogin = function (req, res) {
         idToken: id
     })
         .then(googleResponse => {
+            console.log(googleResponse);
             const responseData = googleResponse.getPayload();
             const email = responseData.email;
             return UserSchema.findOne({
