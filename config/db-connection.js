@@ -1,13 +1,16 @@
 const mongoose = require('mongoose');
-require('dotenv').config();
 
-mongoose.connect( process.env.MONGODB_URI ,{
+if (process.env.NODE_ENV == 'dev') {
+    require('dotenv').config();
+}
+
+mongoose.connect(process.env.MONGODB_URI, {
     useCreateIndex: true,
     useNewUrlParser: true,
     useUnifiedTopology: true,
-    useFindAndModify: false 
+    useFindAndModify: false
 })
-.then(res => console.log("Connected to DB."))
-.catch(err => console.log(err));
+    .then(res => console.log("Connected to DB."))
+    .catch(err => console.log(err));
 
 module.exports = mongoose;

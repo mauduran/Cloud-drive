@@ -34,8 +34,6 @@ router.route('/')
     .delete(authMiddleware, userController.deleteUser);
     // .put(userController.updateUser)
 
-// router.route('/getUser')
-//     .get(userController.getUser);
 
 /**
  * @swagger
@@ -229,9 +227,6 @@ router.route('/delete')
 router.route('/changeName')
     .put(authMiddleware, userController.changeName);
 
-
-// router.route('/getUser')
-//     .post(authMiddleware, userController.getUser);
 
 router.route('/getProfileInfo')
     .get(authMiddleware, userController.getProfileInfo)

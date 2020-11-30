@@ -4,7 +4,7 @@
   "description": "Web App that works as cloud file manager",
   "main": "index.js",
   "scripts": {
-    "start": "npm run styles && npm run scripts && node .",
+    "start": "node .",
     "dev": "npm run styles:watch | npm run scripts:watch |nodemon .",
     "styles": "sass src/styles:public/styles --no-source-map",
     "styles:watch": "sass src/styles:public/styles --no-source-map --watch",
