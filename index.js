@@ -128,6 +128,8 @@ io.on('connection', socket => {
                 userSocket = socketUtils.getSocketIdFromUser(user.userId);
 
                 if (userSocket) {
+                    console.log("Notificaton message")
+                    console.log(userSocket)
                     socket.to(userSocket).emit('notification', {
                         message,
                         file,
@@ -141,6 +143,9 @@ io.on('connection', socket => {
 
                 userSocket = socketUtils.getSocketIdFromUser(file.owner.id);
                 if (userSocket) {
+                    console.log("Notificaton message")
+                    console.log(userSocket)
+                    
                     socket.to(userSocket).emit('notification', {
                         message,
                         file,
