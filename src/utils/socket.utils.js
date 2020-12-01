@@ -113,6 +113,9 @@ const socketInit = (server) => {
                 .find(user => user.id == userId);
 
             try {
+                console.log(file)
+                console.log(emitter);
+                console.log(message);
                 let comment = await fileUtils.writeComment(file, emitter, message);
                 sharedWith.forEach(async user => {
                     await notificationUtils.generateNotification(user.userId, message, file, emitter);
