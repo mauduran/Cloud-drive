@@ -50,10 +50,6 @@ router.route('/')
     .delete(authMiddleware, userController.deleteUser);
     // .put(userController.updateUser)
 
-<<<<<<< HEAD
-=======
-
->>>>>>> main
 /**
  * @swagger
  * /api/users/login:              
