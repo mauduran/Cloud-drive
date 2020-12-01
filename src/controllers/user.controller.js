@@ -141,6 +141,7 @@ let googleLogin = function (req, res) {
         .then(googleResponse => {
             console.log(googleResponse);
             const responseData = googleResponse.getPayload();
+            console.log(responseData);
             const email = responseData.email;
             return UserSchema.findOne({
                 email
@@ -189,6 +190,7 @@ let googleLogin = function (req, res) {
             })
         })
         .catch(err => {
+            console.log("EEEEEERRRRRROOOOOOORRRR\n\n\n")
             console.log(err)
             res.status(400).json({
                 error: true,
