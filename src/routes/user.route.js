@@ -50,6 +50,10 @@ router.route('/')
     .delete(authMiddleware, userController.deleteUser);
     // .put(userController.updateUser)
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> main
 /**
  * @swagger
  * /api/users/login:              
@@ -259,7 +263,6 @@ router.route('/changePassword')
 router.route('/delete')
     .delete(authMiddleware, userController.deleteUser);
 
-
 /**
  * @swagger
  * /api/users/changeName:
@@ -297,17 +300,12 @@ router.route('/delete')
  *        description: User not found!
  */
 
-router.route('/delete')
-    .delete(authMiddleware, userController.deleteUser);
+
 
 router.route('/changeName')
     .put(authMiddleware, userController.changeName);
 
 
-// router.route('/getUser')
-//     .post(authMiddleware, userController.getUser);
-
-    
 /**
  * @swagger
  * /api/users/getProfileInfo:

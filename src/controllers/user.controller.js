@@ -7,7 +7,10 @@ const userUtils = require('../utils/user.utils');
 const fileUtils = require('../utils/file.utils');
 const fileUploadUtils = require('../utils/file-upload.utils');
 const notificationUtils = require('../utils/notification.utils');
-require('dotenv').config();
+
+if (process.env.NODE_ENV == 'dev') {
+    require('dotenv').config();
+}
 
 const { OAuth2Client } = require('google-auth-library');
 
@@ -115,29 +118,33 @@ let deleteUser = async (req, res) => {
     try {
         await UserSchema.findByIdAndDelete(userId);
         const content = await fileUtils.findAllFiles(userId);
-        const awsKeys = content.files.map(file => ({Key: file.storageId}));
+        const awsKeys = content.files.map(file => ({ Key: file.storageId }));
         await fileUtils.removeUserContent(userId);
-        if(awsKeys.length){
+        if (awsKeys.length) {
             await fileUploadUtils.deleteMany(awsKeys);
         }
         await fileUtils.removeUserFromSharedFile(userId);
         return res.status(200).json("Deleted");
-        
+
     } catch (error) {
         console.log(error);
-        return res.status(500).json({error: true, message: "Could not process request"});
+        return res.status(500).json({ error: true, message: "Could not process request" });
     }
 }
 
 let googleLogin = function (req, res) {
     const id = req.body.id;
-    if(!id) res.status(400).json({error: true, message: "missing id"})
+    if (!id) res.status(400).json({ error: true, message: "missing id" })
+    let responseData = null;
+    let email = null;
     googleClient.verifyIdToken({
         idToken: id
     })
         .then(googleResponse => {
-            const responseData = googleResponse.getPayload();
-            const email = responseData.email;
+            console.log(googleResponse);
+            responseData = googleResponse.getPayload();
+            console.log(responseData);
+            email = responseData.email;
             return UserSchema.findOne({
                 email
             })
@@ -185,6 +192,7 @@ let googleLogin = function (req, res) {
             })
         })
         .catch(err => {
+            console.log("EEEEEERRRRRROOOOOOORRRR\n\n\n")
             console.log(err)
             res.status(400).json({
                 error: true,
@@ -312,8 +320,8 @@ let changeName = function (req, res) {
     let newName = req.body.newName;
     let owner = req._user._id;
 
-    if(!newName){
-        res.status(400).json({error: true, message: "Missing fields"})
+    if (!newName) {
+        res.status(400).json({ error: true, message: "Missing fields" })
     }
     UserSchema.findById(owner)
         .then(user => {
@@ -340,15 +348,15 @@ let changeName = function (req, res) {
 
 const updateUserProfilePic = async (req, res) => {
     let { fileName, storageName } = req.body;
-    let owner = { id: req._user._id};
-    
+    let owner = { id: req._user._id };
+
     if (!fileName || !storageName || !owner) return res.status(400).json({ error: true, message: "Missing required fields" });
     let loc = req.file.location;
 
     try {
         await userUtils.updateUserProfilePicId(owner.id, loc);
-        
-        return res.status(200).json({message: "Profile Pic successfully changed"});
+
+        return res.status(200).json({ message: "Profile Pic successfully changed" });
 
     } catch (error) {
         console.log(error);
@@ -360,13 +368,13 @@ const getNotifications = (req, res) => {
     res.json(req._user.notifications);
 }
 
-const deleteNotification = async (req, res)=> {
-    let _userId= req._user._id;
-    let {id} = req.params;
-    if(!id) return res.status(400).json({ error: true, message: "Missing notification ID" });
+const deleteNotification = async (req, res) => {
+    let _userId = req._user._id;
+    let { id } = req.params;
+    if (!id) return res.status(400).json({ error: true, message: "Missing notification ID" });
     try {
         await notificationUtils.deleteNotification(_userId, id);
-        return res.status(200).json({message: "Notification Successfully deleted", notificationId: id});
+        return res.status(200).json({ message: "Notification Successfully deleted", notificationId: id });
     } catch (error) {
         console.log(error);
         return res.status(404).json({ error: true, message: "Notification not found" });
@@ -374,11 +382,11 @@ const deleteNotification = async (req, res)=> {
 }
 
 
-const deleteAllNotifications = async (req, res)=> {
+const deleteAllNotifications = async (req, res) => {
     let id = req._user._id;
     try {
         const result = await notificationUtils.deleteAllNotifications(id);
-        return res.status(200).json(result);
+        return res.status(200).json({ message: "Notifications cleared successfully" });
     } catch (error) {
         console.log(error);
         return res.status(400).json({ error: true, message: error });
