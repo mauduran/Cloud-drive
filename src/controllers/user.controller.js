@@ -135,12 +135,13 @@ let deleteUser = async (req, res) => {
 let googleLogin = function (req, res) {
     const id = req.body.id;
     if (!id) res.status(400).json({ error: true, message: "missing id" })
+    let responseData = null;
     googleClient.verifyIdToken({
         idToken: id
     })
         .then(googleResponse => {
             console.log(googleResponse);
-            const responseData = googleResponse.getPayload();
+            responseData = googleResponse.getPayload();
             console.log(responseData);
             const email = responseData.email;
             return UserSchema.findOne({
