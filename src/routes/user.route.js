@@ -70,11 +70,11 @@ router.route('/')
  *              email:
  *                description: Account email
  *                type: string
- *                example: ipanchito@iteso.mx
+ *                example: admin@cloudrive.com
  *              password:
  *                description: Password
  *                type: string
- *                example: panchito                
+ *                example: password                
  *    responses: 
  *      "200":
  *        description: Login successful.
@@ -313,15 +313,15 @@ router.route('/changeName')
  * /api/users/getProfileInfo:
  *  get:
  *    description: Get user info with token
- *    tags: [Users]
+ *    tags: [Users] 
  *    parameters:
  *      - in: header
- *        name: authorization
+ *        name: Authorization
  *        description: User token
  *        schema:
  *          type: string
- *          example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImlwYW5jaGl0b0BpdGVzby5teCIsImlhdCI6MTYwNjYzODUxNH0.qORzRuFf8WMOB-S-OKUXyb2591cwexn8qpCzFseRcJI"
- *        required: true    
+ *          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImlwYW5jaGl0b0BpdGVzby5teCIsImlhdCI6MTYwNjU0NTIzMn0.r-7mMWw6lLByTfcJcKOofd8KUnFbQaATjn8i0XOm2t4 
+ *        required: true
  *    responses: 
  *      "200":
  *        description: User found!
@@ -337,36 +337,13 @@ router.route('/getProfileInfo')
  *  get:
  *    description: Get user notifications
  *    tags: [Users]
- *    parameters:
- *      - in: header
- *        name: Authorization
- *        description: User token
- *        schema:
- *          type: string
- *          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImlwYW5jaGl0b0BpdGVzby5teCIsImlhdCI6MTYwNjU0NTIzMn0.r-7mMWw6lLByTfcJcKOofd8KUnFbQaATjn8i0XOm2t4 
- *        required: true    
- *    responses: 
- *      "200":
- *        description: User found!
- *      "404": 
- *        description: Could not get user profile
- *  delete:
- *    description: Delete all user notifications
- *    tags: [Users]
- *    parameters:
- *      - in: header
- *        name: Authorization
- *        description: User token
- *        schema:
- *          type: string
- *          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImlwYW5jaGl0b0BpdGVzby5teCIsImlhdCI6MTYwNjU0NTIzMn0.r-7mMWw6lLByTfcJcKOofd8KUnFbQaATjn8i0XOm2t4 
- *        required: true    
  *    responses: 
  *      "200":
  *        description: User found!
  *      "404": 
  *        description: Could not get user profile
  */
+
 router.route('/notifications')
     .get(authMiddleware, userController.getNotifications)
     .delete(authMiddleware, userController.deleteAllNotifications);
