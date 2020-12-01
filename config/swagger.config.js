@@ -14,6 +14,10 @@ const swaggerOptions = {
             {
                 "url":"http://localhost:3000",
                 "description":"Development Server"
+            },
+            {
+                "url":"https://cloudrive.digital",
+                "description":"Prod Server"
             }
         ],
         // components: {
@@ -24,9 +28,6 @@ const swaggerOptions = {
         //             "in": "header", // can be "header", "query" or "cookie"
         //         }
         //     }
-        // },
-        // security: {
-        //     "ApiKeyAuth": []
         // }
     },
     apis: ["index.js", "./src/routes/*.route.js"]
