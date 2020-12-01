@@ -21,7 +21,6 @@ if(process.env.NODE_ENV=='dev'){
     require('dotenv').config();
 }
 
-
 const app = express();
 const PORT = process.env.PORT || 3000;
 app.engine('handlebars', handlebars());
@@ -145,7 +144,7 @@ io.on('connection', socket => {
                 if (userSocket) {
                     console.log("Notificaton message")
                     console.log(userSocket)
-                    
+
                     socket.to(userSocket).emit('notification', {
                         message,
                         file,

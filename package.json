@@ -5,11 +5,10 @@
   "main": "index.js",
   "scripts": {
     "start": "node .",
-    "dev": "npm run styles:watch | npm run scripts:watch |nodemon .",
+    "dev": "cross-env NODE_ENV=dev nodemon .",
     "styles": "sass src/styles:public/styles --no-source-map",
     "styles:watch": "sass src/styles:public/styles --no-source-map --watch",
-    "scripts": "tsc",
-    "scripts:watch": "tsc --watch",
+    "serve": "cross-env NODE_ENV=dev nodemon .",
     "test": "jest"
   },
   "repository": {
@@ -51,6 +50,7 @@
     "unique-names-generator": "^4.3.1"
   },
   "devDependencies": {
+    "cross-env": "^7.0.2",
     "jest": "^26.6.0",
     "typescript": "^4.0.3"
   }
