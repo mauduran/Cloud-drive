@@ -322,6 +322,8 @@ router.route('/changeName')
  *          type: string
  *          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImlwYW5jaGl0b0BpdGVzby5teCIsImlhdCI6MTYwNjU0NTIzMn0.r-7mMWw6lLByTfcJcKOofd8KUnFbQaATjn8i0XOm2t4 
  *        required: true
+ *    security: 
+ *      ApiKeyAuth: []
  *    responses: 
  *      "200":
  *        description: User found!
