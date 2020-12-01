@@ -183,13 +183,14 @@ io.on('connection', socket => {
                 let userSocket = socketUtils.getSocketIdFromUser(user.userId);
 
                 if (userSocket) {
-
-                    io.to(userSocket).emit('notification', {
-                        message: 'commented file',
-                        file,
-                        emitter,
-                        type: 'comment'
-                    });
+                    if(emitter.id != user.userId){
+                        io.to(userSocket).emit('notification', {
+                            message: 'commented file',
+                            file,
+                            emitter,
+                            type: 'comment'
+                        });
+                    }
                     io.to(userSocket).emit('comment', comment);
                 }
             })
