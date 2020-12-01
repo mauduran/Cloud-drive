@@ -18,6 +18,8 @@ const socketInit = (server) => {
         const authToken = socket.handshake.headers['authorization'];
         const userId = socket.handshake.headers['userid'];
 
+        console.log(userId);
+
         socketUtils.addActiveUser(socket.id, userId);
         console.log('Client connected', socket.id);
 
