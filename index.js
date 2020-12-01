@@ -52,11 +52,8 @@ app.use('/assets', express.static(path.join(__dirname, 'public')));
 app.use('/api/docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs));
 app.use('/api/users', userRouter);
 app.use('/api/files', fileRouter);
-app.use('/api/filePermissions', fileRouter);
-
-socketConfig.socketInit(server);
-
 
 const server = app.listen(PORT, () => {
     console.log("Server running on PORT " + PORT);
 })
+socketConfig.socketInit(server);
