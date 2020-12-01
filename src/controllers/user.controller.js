@@ -136,6 +136,7 @@ let googleLogin = function (req, res) {
     const id = req.body.id;
     if (!id) res.status(400).json({ error: true, message: "missing id" })
     let responseData = null;
+    let email = null;
     googleClient.verifyIdToken({
         idToken: id
     })
@@ -143,7 +144,7 @@ let googleLogin = function (req, res) {
             console.log(googleResponse);
             responseData = googleResponse.getPayload();
             console.log(responseData);
-            const email = responseData.email;
+            email = responseData.email;
             return UserSchema.findOne({
                 email
             })
