@@ -105,6 +105,8 @@ const socketInit = (server) => {
             let message = data.body;
             let sharedWith = file.sharedWith;
 
+            console.log("userId");
+            console.log(userId);
             const emitter = (file.owner.id == userId) ? file.owner : file.sharedWith
                 .map(user => ({
                     email: user.email,
@@ -113,9 +115,8 @@ const socketInit = (server) => {
                 .find(user => user.id == userId);
 
             try {
-                console.log(file)
+                console.log("emitter!")
                 console.log(emitter);
-                console.log(message);
                 let comment = await fileUtils.writeComment(file, emitter, message);
                 sharedWith.forEach(async user => {
                     await notificationUtils.generateNotification(user.userId, message, file, emitter);
