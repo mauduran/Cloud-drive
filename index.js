@@ -119,24 +119,28 @@ io.on('connection', socket => {
             }))
             .find(user => user.id == userId);
 
+            console.log(data);
+            console.log(sharedWith);
 
         if (!message) return;
         try {
-            sharedWith.forEach(async user => {
-                await notificationUtils.generateNotification(user.userId, message, file, emitter);
-                userSocket = socketUtils.getSocketIdFromUser(user.userId);
-
-                if (userSocket) {
-                    console.log("Notificaton message")
-                    console.log(userSocket)
-                    socket.to(userSocket).emit('notification', {
-                        message,
-                        file,
-                        emitter,
-                        type
-                    });
-                }
-            })
+            if(sharedWith){
+                sharedWith.forEach(async user => {
+                    await notificationUtils.generateNotification(user.userId, message, file, emitter);
+                    userSocket = socketUtils.getSocketIdFromUser(user.userId);
+    
+                    if (userSocket) {
+                        console.log("Notificaton message")
+                        console.log(userSocket)
+                        socket.to(userSocket).emit('notification', {
+                            message,
+                            file,
+                            emitter,
+                            type
+                        });
+                    }
+                })
+            }
             if (emitter.id != file.owner.id) {
                 await notificationUtils.generateNotification(file.owner.id, message, file, emitter);
 
@@ -179,6 +183,7 @@ io.on('connection', socket => {
                 let userSocket = socketUtils.getSocketIdFromUser(user.userId);
 
                 if (userSocket) {
+
                     io.to(userSocket).emit('notification', {
                         message: 'commented file',
                         file,
