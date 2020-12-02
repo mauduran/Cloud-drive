@@ -24,6 +24,8 @@ const router = express.Router();
  *    responses: 
  *      "200":
  *        description: array of users
+ *      "401": 
+ *        description: Invalid Token!
  *      "404": 
  *          description: No users found
  *      "500":
@@ -42,6 +44,8 @@ const router = express.Router();
  *    responses: 
  *      "200":
  *        description: Deleted
+ *      "401": 
+ *        description: Invalid Token!
  *      "500":
  *        description: Could not process request. 
  */
@@ -140,6 +144,8 @@ router.route('/login/google')
  *        description: Login successful.
  *      "400":
  *        description: Could not login with google"
+ *      "401": 
+ *        description: Invalid Token!
  *      "500":
  *          description: Unexpected error!
  */
@@ -229,6 +235,8 @@ router.route('/register')
  *        description: Password Change Successful!
  *      "400":
  *        description: Invalid request entered.
+ *      "401": 
+ *        description: Invalid Token!
  *      "404": 
  *        description: User not found!
  */
@@ -252,6 +260,8 @@ router.route('/changePassword')
  *    responses: 
  *      "200":
  *        description: Deleted
+ *      "401": 
+ *        description: Invalid Token!
  *      "500":
  *        description: Could not process request. 
  */ 
@@ -292,6 +302,8 @@ router.route('/delete')
  *        description: Name changed successfully!
  *      "400":
  *        description: Invalid request entered.
+ *      "401": 
+ *        description: Invalid Token!
  *      "404": 
  *        description: User not found!
  */
@@ -321,8 +333,11 @@ router.route('/changeName')
  *    responses: 
  *      "200":
  *        description: User found!
+ *      "401": 
+ *        description: Invalid Token!
  *      "404": 
  *        description: Could not get user profile
+ * 
  */
 router.route('/getProfileInfo')
     .get(authMiddleware, userController.getProfileInfo)
@@ -331,11 +346,23 @@ router.route('/getProfileInfo')
  * @swagger
  * /api/users/notifications:
  *  get:
- *    description: Get user notifications
+ *    description: Get all user notifications
+ *    tags: [Users]
+ *    responses: 
+ *      "200":
+ *        description: Object with notifications array!
+ *      "401": 
+ *        description: Invalid Token!
+ *      "404": 
+ *        description: Could not get user profile
+ *  delete:
+ *    description: Delete all user notifications
  *    tags: [Users]
  *    responses: 
  *      "200":
  *        description: User found!
+ *      "401": 
+ *        description: Invalid Token!
  *      "404": 
  *        description: Could not get user profile
  */
@@ -401,6 +428,8 @@ router.route('/notifications/:id')
  *        description: "true"
  *      "400": 
  *        description: Missing notification ID
+ *      "401": 
+ *        description: Invalid Token!
  */    
 
 router.route('/profile-pic')
