@@ -120,6 +120,17 @@ const findSharedFiles = async (user, path) => {
     }
 }
 
+//  Así debería ser
+// const findSharedFiles2 = async (user) => {
+//     try {
+//         let files = await FileSchema.find({ "sharedWith.userId": user._id, status: fileConstants.STATUS_TYPES.ACTIVE, isDirectory: false });
+//         let folders = await FileSchema.find({ "sharedWith.userId": user._id, status: fileConstants.STATUS_TYPES.ACTIVE,  isDirectory: true });
+//         return Promise.resolve({ files, folders });
+//     } catch (error) {
+//         return Promise.reject(error);
+//     }
+// }
+
 const findPendingFiles = async (user, path) => {
     try {
         let files = await FileSchema.find({ "sharedWith.userId": user._id, isDirectory: false, status: fileConstants.STATUS_TYPES.ACTIVE, verificationStatus: fileConstants.VERIFICATION_STATUS_TYPES.PENDING });
@@ -128,6 +139,16 @@ const findPendingFiles = async (user, path) => {
         return Promise.reject(error);
     }
 }
+
+//  Así debería ser
+// const findPendingFiles2 = async (user) => {
+//     try {
+//         let files = await FileSchema.find({ "sharedWith.userId": user._id, isDirectory: false, status: fileConstants.STATUS_TYPES.ACTIVE, verificationStatus: fileConstants.VERIFICATION_STATUS_TYPES.PENDING });
+//         return Promise.resolve(files);
+//     } catch (error) {
+//         return Promise.reject(error);
+//     }
+// }
 
 const findFile = async (path, fileName, owner) => {
     try {
