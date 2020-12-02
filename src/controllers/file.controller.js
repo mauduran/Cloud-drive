@@ -9,9 +9,6 @@ const createFile = async (req, res) => {
     let owner = { id: req._user._id, email: req._user.email };
 
     console.log(req.body);
-
-    console.log("MMMM")
-    
     
     try {
         sharedWith = JSON.parse(sharedWith).map(user => {
@@ -179,20 +176,6 @@ const getSharedFiles = async (req, res) => {
     }
 
 }
-//Así debería ser
-// const getSharedFiles2 = async (req, res) => {
-//     let user = req._user;
-
-//     try {
-//         const files = await fileUtils.findSharedFiles2(user);
-//         if(!files)  return res.status(404);
-//         return res.status(200).json(files);
-//     } catch (error) {
-//         console.log(error)
-//         return res.status(400).json({ error: true, message: "Unexpected Error" })
-//     }
-
-// }
 
 const getPendingFiles = async (req, res) => {
     let { path } = req.query;
@@ -210,21 +193,6 @@ const getPendingFiles = async (req, res) => {
 
 }
 
-//  Así debería ser
-// const getPendingFiles2 = async (req, res) => {
-
-//     let user = req._user;
-
-//     try {
-//         const files = await fileUtils.findPendingFiles2(user);
-//         if(!files)  return res.status(404);
-//         return res.status(200).json(files);
-//     } catch (error) {
-//         console.log(error)
-//         return res.status(400).json({ error: true, message: "Unexpected Error" })
-//     }
-
-// }
 
 const downloadFile = async (req, res) => {
     let { id } = req.params;

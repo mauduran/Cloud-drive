@@ -39,7 +39,7 @@ const socketInit = (server) => {
                     message = 'shared file';
                     await fileUtils.updateFileSharing(file._id, file.owner.id, sharedWith);
                     break;
-                case 'update':
+                case 'update':        
                     message = 'updated file';
                     break;
                 case 'delete':
@@ -59,8 +59,6 @@ const socketInit = (server) => {
                 }))
                 .find(user => user.id == userId);
 
-            console.log(data);
-            console.log(sharedWith);
 
             if (!message) return;
             try {
@@ -117,8 +115,6 @@ const socketInit = (server) => {
                 .find(user => user.id == userId);
 
             try {
-                console.log("emitter!")
-                console.log(emitter);
                 let comment = await fileUtils.writeComment(file, emitter, message);
                 sharedWith.forEach(async user => {
                     await notificationUtils.generateNotification(user.userId, message, file, emitter);
