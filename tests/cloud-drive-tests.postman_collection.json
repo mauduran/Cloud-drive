@@ -1,0 +1,2833 @@
+{
+	"info": {
+		"_postman_id": "d97373cc-e658-41e1-bcf4-3a3ebfd098db",
+		"name": "CloudDrive Testing",
+		"description": "This collection is used for endpoint testing on the CloudDrive API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Register",
+					"item": [
+						{
+							"name": "Register - Success",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "c1e2c9b5-5bd8-42ad-bee4-7ed85b98aee8",
+										"exec": [
+											"var loginData = pm.response.json()",
+											"",
+											"pm.test(\"response is created\", function () {",
+											"    pm.response.to.have.status(201);",
+											"    pm.response.to.be.json",
+											"});",
+											"",
+											"pm.test(\"response has successful message\", function () {",
+											"    pm.expect(loginData).to.equal('User created!')",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Francisco Sevilla\",\n    \"password\": \"EsteEquipoTiene100\",\n    \"email\": \"fsevilla@iteso.mx\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{apiUrl}}/users/register",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"users",
+										"register"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Register - Taken email",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "c3cf0482-c15e-481c-aa7f-a04ef7d6af01",
+										"exec": [
+											"var loginData = pm.response.json()",
+											"",
+											"pm.test(\"response is conflict\", function () {",
+											"    pm.response.to.have.status(409);",
+											"    pm.response.to.be.json",
+											"});",
+											"",
+											"pm.test(\"response has successful message\", function () {",
+											"    pm.expect(loginData).to.equal('User already exists!')",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Francisco Sevilla\",\n    \"password\": \"EsteEquipoTiene100\",\n    \"email\": \"fsevilla@iteso.mx\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{apiUrl}}/users/register",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"users",
+										"register"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Register - Missing fields",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "ea85f0b9-7182-419f-a06f-4f9e15ae1f42",
+										"exec": [
+											"var loginData = pm.response.json()",
+											"",
+											"pm.test(\"response is not ok\", function () {",
+											"    pm.response.to.have.status(400);",
+											"    pm.response.to.be.json",
+											"});",
+											"",
+											"pm.test(\"response has error and error message\", function () {",
+											"    pm.expect(loginData.error).to.be.true;",
+											"    pm.expect(loginData.message).to.equal('Missing required fields')",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{apiUrl}}/users/register",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"users",
+										"register"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"description": "Testing Register Module",
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "GoogleLogin",
+					"item": [
+						{
+							"name": "Google Login - Missing id",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "550087f6-582e-4bda-8d22-adcfbb06e2ae",
+										"exec": [
+											"var loginData = pm.response.json()",
+											"",
+											"pm.test(\"response is not ok\", function () {",
+											"    pm.response.to.have.status(400);",
+											"    pm.response.to.be.json",
+											"});",
+											"",
+											"pm.test(\"response has error and error message\", function () {",
+											"    pm.expect(loginData.error).to.be.true;",
+											"    pm.expect(loginData.message).to.equal('missing id')",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{apiUrl}}/users/login/google",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"users",
+										"login",
+										"google"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Google Login - Invalid Id",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "39e33482-1f69-4b52-8368-311821ebd721",
+										"exec": [
+											"var loginData = pm.response.json()",
+											"",
+											"pm.test(\"response is not ok\", function () {",
+											"    pm.response.to.have.status(400);",
+											"    pm.response.to.be.json",
+											"});",
+											"",
+											"pm.test(\"response has error and error message\", function () {",
+											"    pm.expect(loginData.error).to.be.true;",
+											"    pm.expect(loginData.message).to.equal('Could not login with google')",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"id\": 123\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{apiUrl}}/users/login/google",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"users",
+										"login",
+										"google"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Google Login - Success",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "f0827c99-9361-4022-bc0b-2dab53c46b5d",
+										"exec": [
+											"var loginData = pm.response.json();",
+											"pm.environment.set('authorization', loginData.token);",
+											"",
+											"pm.test(\"response is ok\", function () {",
+											"    pm.response.to.have.status(200);",
+											"    pm.response.to.be.json",
+											"});",
+											"",
+											"pm.test(\"response has userId and Token\", function () {",
+											"    pm.expect(loginData.token).to.be.a('string');",
+											"    pm.expect(loginData.userId).to.be.a('string');",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"id\": \"eyJhbGciOiJSUzI1NiIsImtpZCI6IjJlMzAyNWYyNmI1OTVmOTZlYWM5MDdjYzJiOTQ3MTQyMmJjYWViOTMiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJhY2NvdW50cy5nb29nbGUuY29tIiwiYXpwIjoiMTA5NjM2OTMzMzQzMS11N2ttaDAzMDBzcmJuMWNvczRpa2dvN2Yyc29lOTJqZS5hcHBzLmdvb2dsZXVzZXJjb250ZW50LmNvbSIsImF1ZCI6IjEwOTYzNjkzMzM0MzEtdTdrbWgwMzAwc3JibjFjb3M0aWtnbzdmMnNvZTkyamUuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJzdWIiOiIxMTQ1OTQ3MDQ3NDI1MDc3NDY0OTQiLCJlbWFpbCI6Im1hdWR1cmFuNEBnbWFpbC5jb20iLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiYXRfaGFzaCI6ImFWRkt4Q2FrZEI3c0tTc01OQm9aRmciLCJuYW1lIjoiTWF1cmljaW8gRHVyYW4gUCIsInBpY3R1cmUiOiJodHRwczovL2xoNC5nb29nbGV1c2VyY29udGVudC5jb20vLUU5akpyWFMzTmF3L0FBQUFBQUFBQUFJL0FBQUFBQUFBQWdrL0FNWnV1Y2tDMXlaa2VEb3ZjZzJEMjlvMFZmcTdlei0tZ0Evczk2LWMvcGhvdG8uanBnIiwiZ2l2ZW5fbmFtZSI6Ik1hdXJpY2lvIiwiZmFtaWx5X25hbWUiOiJEdXJhbiBQIiwibG9jYWxlIjoiZXMtNDE5IiwiaWF0IjoxNjA2NjM3OTM5LCJleHAiOjE2MDY2NDE1MzksImp0aSI6IjYyY2ExZTgyZjI0NmI0NDQyY2M5NzA1ZmUyMTViMjczNWE0ZTY2ZjYifQ.iubVC0vR6sq94QyAz0h6ikUy9Ri4dNtIclw5RqVExHFej2Ij_HfWnZMeYuqHuRzpSxb1KJ8MAqrIaqRRXttMlzp66j-KnH2mrOOwgz7YYvMFhb-ERvEr9_YAI0XwHVslsDR1fLqJnrzK8AZgs55fHb5X6X5F3NsBjwDAQBFDl8U1KVjTmlWxusjvrVFkBB6AX6yQ_7czlZ-oX0yd-kVsMb0iD5D4swAHvBEsOQ5pPiUnDIuUmXYQnFWzRtgcrrKMLe8zQbIiRnRiHNaxwC58lb2YpICdxb7qcorjmsbRvnC1ENODz3iiX3EbCCInt41-qjQ362L7xe1kwkiFllUa4w\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{apiUrl}}/users/login/google",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"users",
+										"login",
+										"google"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "Logout",
+					"item": [
+						{
+							"name": "Logout - Missing token",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "f1dd9b2c-ea95-45ec-830f-6a98a1e1826e",
+										"exec": [
+											"var loginData = pm.response.json()",
+											"",
+											"pm.test(\"response is unauthorized\", function () {",
+											"    pm.response.to.have.status(401);",
+											"    pm.response.to.be.json",
+											"});",
+											"",
+											"pm.test(\"response has error and error message\", function () {",
+											"    pm.expect(loginData.error).to.be.true;",
+											"    pm.expect(loginData.message).to.equal('Missing authorization header')",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{apiUrl}}/users/logout",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"users",
+										"logout"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Logout - Success",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "914977c4-c6ec-4e2c-b0d7-47ca1998be33",
+										"exec": [
+											"var loginData = pm.response.json()",
+											"",
+											"pm.test(\"response is ok\", function () {",
+											"    pm.response.to.have.status(200);",
+											"    pm.response.to.be.json",
+											"});",
+											"",
+											"pm.test(\"response does not have error\", function () {",
+											"    pm.expect(loginData.error).to.be.false;",
+											"    pm.expect(loginData.message).to.equal('Logout successful')",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{authorization}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{apiUrl}}/users/logout",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"users",
+										"logout"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Logout - Invalid Token",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "83a74695-9f2e-4012-9d7c-0d3dd4994533",
+										"exec": [
+											"var loginData = pm.response.json()",
+											"",
+											"pm.test(\"response is ok\", function () {",
+											"    pm.response.to.have.status(401);",
+											"    pm.response.to.be.json",
+											"});",
+											"",
+											"pm.test(\"response has error\", function () {",
+											"    pm.expect(loginData.error).to.be.true;",
+											"    pm.expect(loginData.message).to.equal('Invalid Token!')",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "invalidToken",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{apiUrl}}/users/logout",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"users",
+										"logout"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "Login",
+					"item": [
+						{
+							"name": "Login - Success!",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "79d07207-8844-48a3-a17e-ebedb5ff9b44",
+										"exec": [
+											"var loginData = pm.response.json();",
+											"pm.environment.set('authorization', loginData.token);",
+											"",
+											"pm.test(\"response is ok\", function () {",
+											"    pm.response.to.have.status(200);",
+											"    pm.response.to.be.json",
+											"});",
+											"",
+											"pm.test(\"response has userId and Token\", function () {",
+											"    pm.expect(loginData.token).to.be.a('string');",
+											"    pm.expect(loginData.userId).to.be.a('string');",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"password\": \"EsteEquipoTiene100\",\n    \"email\": \"fsevilla@iteso.mx\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{apiUrl}}/users/login",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"users",
+										"login"
+									]
+								},
+								"description": "Uses email-password combination to login."
+							},
+							"response": []
+						},
+						{
+							"name": "Login - Success! t@t.com",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "1f2e602d-3868-4350-8bbc-1da21a5004b9",
+										"exec": [
+											"var loginData = pm.response.json();",
+											"pm.environment.set('authorization-t', loginData.token);",
+											"",
+											"pm.test(\"response is ok\", function () {",
+											"    pm.response.to.have.status(200);",
+											"    pm.response.to.be.json",
+											"});",
+											"",
+											"pm.test(\"response has userId and Token\", function () {",
+											"    pm.expect(loginData.token).to.be.a('string');",
+											"    pm.expect(loginData.userId).to.be.a('string');",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"password\": \"123456\",\n    \"email\": \"t@t.com\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{apiUrl}}/users/login",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"users",
+										"login"
+									]
+								},
+								"description": "Uses email-password combination to login."
+							},
+							"response": []
+						},
+						{
+							"name": "Login - Missing fields",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "66484018-82b1-4471-a1d9-4c7b271792c3",
+										"exec": [
+											"var loginData = pm.response.json()",
+											"",
+											"pm.test(\"response is not ok\", function () {",
+											"    pm.response.to.have.status(400);",
+											"    pm.response.to.be.json",
+											"});",
+											"",
+											"pm.test(\"response has error and error message\", function () {",
+											"    pm.expect(loginData.error).to.be.true;",
+											"    pm.expect(loginData.message).to.equal('Missing required fields')",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\": \"t@t.com\"\n}"
+								},
+								"url": {
+									"raw": "{{apiUrl}}/users/login",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"users",
+										"login"
+									]
+								},
+								"description": "Tries to login without email or password. "
+							},
+							"response": []
+						},
+						{
+							"name": "Login - wrong credentials",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "524fb860-7bae-4000-a080-884d78b00add",
+										"exec": [
+											"var loginData = pm.response.json()",
+											"",
+											"pm.test(\"response is not ok\", function () {",
+											"    pm.response.to.have.status(400);",
+											"    pm.response.to.be.json",
+											"});",
+											"",
+											"pm.test(\"response has error and error message\", function () {",
+											"    pm.expect(loginData.error).to.be.true;",
+											"    pm.expect(loginData.message).to.equal('Invalid credentials')",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\": \"t@t.com\",\n    \"password\": \"12356\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{apiUrl}}/users/login",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"users",
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Login - Not existing email",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "a21f8f74-50e0-40c5-ab22-26e625759e93",
+										"exec": [
+											"var loginData = pm.response.json()",
+											"",
+											"pm.test(\"response is not ok\", function () {",
+											"    pm.response.to.have.status(404);",
+											"    pm.response.to.be.json",
+											"});",
+											"",
+											"pm.test(\"response has error and error message\", function () {",
+											"    pm.expect(loginData.error).to.be.true;",
+											"    pm.expect(loginData.message).to.equal('User not found!')",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\": \"test@mytes.com\",\n    \"password\": \"123456\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{apiUrl}}/users/login",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"users",
+										"login"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "Change Password",
+					"item": [
+						{
+							"name": "Change Password - Success",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "87c828ff-88fb-4df9-9ff6-9e5f6ef5fe47",
+										"exec": [
+											"var passwordChangeRes = pm.response.json();",
+											"",
+											"pm.test(\"response is ok\", function () {",
+											"    pm.response.to.have.status(200);",
+											"    pm.response.to.be.json",
+											"});",
+											"",
+											"pm.test(\"response has successfull message\", function () {",
+											"    pm.expect(passwordChangeRes.message).to.equal('Password Change Successful!')",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{authorization-t}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"oldPassword\": \"123456\",\n    \"newPassword\": \"1234567\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{apiUrl}}/users/changePassword",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"users",
+										"changePassword"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Change Password - Success (revert)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "1a85faae-0c05-4a6c-a11c-d4bed44eae6d",
+										"exec": [
+											"var passwordChangeRes = pm.response.json();",
+											"",
+											"pm.test(\"response is ok\", function () {",
+											"    pm.response.to.have.status(200);",
+											"    pm.response.to.be.json",
+											"});",
+											"",
+											"pm.test(\"response has successfull message\", function () {",
+											"    pm.expect(passwordChangeRes.message).to.equal('Password Change Successful!')",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "{{authorization-t}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"oldPassword\": \"1234567\",\n    \"newPassword\": \"123456\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{apiUrl}}/users/changePassword",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"users",
+										"changePassword"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Change Password - Invalid Credentials",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "63036814-4555-496c-9066-7196ef932121",
+										"exec": [
+											"var passwordChangeRes = pm.response.json();",
+											"",
+											"pm.test(\"response is ok\", function () {",
+											"    pm.response.to.have.status(400);",
+											"    pm.response.to.be.json",
+											"});",
+											"",
+											"pm.test(\"response has successfull message\", function () {",
+											"    pm.expect(passwordChangeRes.error).to.be.true",
+											"    pm.expect(passwordChangeRes.message).to.equal('Invalid credentials')",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "{{authorization-t}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"oldPassword\": \"12345690088\",\n    \"newPassword\": \"1234567\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{apiUrl}}/users/changePassword",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"users",
+										"changePassword"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Change Password - Missing token",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "4905d2e5-659c-47c3-a419-7ca9cfa1dd38",
+										"exec": [
+											"var passwordChangeRes = pm.response.json()",
+											"",
+											"pm.test(\"response is unauthorized\", function () {",
+											"    pm.response.to.have.status(401);",
+											"    pm.response.to.be.json",
+											"});",
+											"",
+											"pm.test(\"response has error and error message\", function () {",
+											"    pm.expect(passwordChangeRes.error).to.be.true;",
+											"    pm.expect(passwordChangeRes.message).to.equal('Missing authorization header')",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "{{authorization-t}}",
+										"disabled": true
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"oldPassword\": \"123456\",\n    \"newPassword\": \"1234567\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{apiUrl}}/users/changePassword",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"users",
+										"changePassword"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "Get Profile Info",
+					"item": [
+						{
+							"name": "GetProfileInfo - Success",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "ece8ae3a-256d-43e1-9cd5-bb12139ddca1",
+										"exec": [
+											"var profileData = pm.response.json();",
+											"",
+											"pm.test(\"response is ok\", function () {",
+											"    pm.response.to.have.status(200);",
+											"    pm.response.to.be.json",
+											"});",
+											"",
+											"pm.test(\"response user schema and message\", function () {",
+											"    pm.expect(profileData.user.name).to.be.a('string');",
+											"    pm.expect(profileData.user.email).to.be.a('string');",
+											"    pm.expect(profileData.user.img).to.be.a('string');",
+											"    pm.expect(profileData.user.joined).to.be.a(\"string\");",
+											"    pm.expect(profileData.message).to.equal(\"User found\");",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{authorization-t}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{apiUrl}}/users/getProfileInfo",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"users",
+										"getProfileInfo"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GetProfileInfo - invalid token",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "b185e614-1fd2-49cb-9236-2b09f460d6d1",
+										"exec": [
+											"var profileData = pm.response.json();",
+											"",
+											"pm.test(\"response is ok\", function () {",
+											"    pm.response.to.have.status(401);",
+											"    pm.response.to.be.json",
+											"});",
+											"",
+											"pm.test(\"response user schema and message\", function () {",
+											"    pm.expect(profileData.error).to.be.true;",
+											"    pm.expect(profileData.message).to.equal(\"Invalid Token!\");",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "invalid token"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{apiUrl}}/users/getProfileInfo",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"users",
+										"getProfileInfo"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "Get Users",
+					"item": [
+						{
+							"name": "Get Users - All",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "cff78989-7f5d-4b35-85d4-af9ef72622c5",
+										"exec": [
+											"var usersData = pm.response.json();",
+											"",
+											"",
+											"",
+											"pm.test(\"response is ok\", function () {",
+											"    pm.response.to.have.status(200);",
+											"    pm.response.to.be.json",
+											"});",
+											"",
+											"pm.test(\"response user schema and message\", function () {",
+											"    pm.expect(usersData.results).to.be.an('array');",
+											"    pm.expect(usersData.size).to.be.a('number')",
+											"    if(usersData.size>0) {",
+											"        pm.expect(usersData.results[0]).to.have.keys(\"id\", \"name\", \"email\", \"joined\", \"imageUrl\", \"lastConnection\").and.be.an(\"object\");",
+											"    }",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{authorization-t}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{apiUrl}}/users/",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"users",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Users - q=\"...\"",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "161674ce-7110-4663-9e25-3a6cb73d9009",
+										"exec": [
+											"var usersData = pm.response.json();",
+											"",
+											"var userArraySchema = {",
+											"    \"type\": \"array\",",
+											"    \"items\": {",
+											"        \"type\": \"object\",",
+											"        \"properties\": {",
+											"            \"id\": { \"type\": \"string\" },",
+											"            \"name\": { \"type\": \"string\" },",
+											"            \"email\": { \"type\": \"string\" },",
+											"            \"joined\": { \"type\": \"string\" },",
+											"            \"imageUrl\": { \"type\": \"string\" },",
+											"            \"lastConnection\": { \"type\": \"string\" }",
+											"        },",
+											"        \"required\": [\"id\", \"name\", \"email\", \"joined\", \"imageUrl\",\"lastConnection\"]",
+											"    }",
+											"",
+											"};",
+											"",
+											"",
+											"",
+											"",
+											"",
+											"pm.test(\"response is ok\", function () {",
+											"    pm.response.to.have.status(200);",
+											"    pm.response.to.be.json",
+											"});",
+											"",
+											"pm.test(\"response user schema and message\", function () {",
+											"    pm.expect(usersData.results).to.be.an('array');",
+											"    pm.expect(usersData.results).to.have.jsonSchema(userArraySchema)",
+											"    pm.expect(usersData.size).to.be.a('number')",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{authorization-t}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{apiUrl}}/users/?q=mau",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"users",
+										""
+									],
+									"query": [
+										{
+											"key": "q",
+											"value": "mau"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Users - q=\"...\" Nothing found",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "ca4c8d50-d228-49e0-8cde-dd1543b7036a",
+										"exec": [
+											"var usersData = pm.response.json();",
+											"",
+											"var userArraySchema = {",
+											"    \"type\": \"array\",",
+											"    \"items\": {",
+											"        \"type\": \"object\",",
+											"        \"properties\": {",
+											"            \"id\": { \"type\": \"string\" },",
+											"            \"name\": { \"type\": \"string\" },",
+											"            \"email\": { \"type\": \"string\" },",
+											"            \"joined\": { \"type\": \"string\" },",
+											"            \"imageUrl\": { \"type\": \"string\" },",
+											"            \"lastConnection\": { \"type\": \"string\" }",
+											"        },",
+											"        \"required\": [\"id\", \"name\", \"email\", \"joined\", \"imageUrl\",\"lastConnection\"]",
+											"    }",
+											"",
+											"};",
+											"",
+											"",
+											"",
+											"",
+											"",
+											"pm.test(\"response is ok\", function () {",
+											"    pm.response.to.have.status(200);",
+											"    pm.response.to.be.json",
+											"});",
+											"",
+											"pm.test(\"response user schema and message\", function () {",
+											"    pm.expect(usersData.results).to.be.an('array');",
+											"    pm.expect(usersData.results).to.have.jsonSchema(userArraySchema)",
+											"    pm.expect(usersData.size).to.be.a('number')",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "{{authorization-t}}"
+									}
+								],
+								"url": {
+									"raw": "{{apiUrl}}/users?q=12345tg",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"users"
+									],
+									"query": [
+										{
+											"key": "q",
+											"value": "12345tg"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Users -  Missing token",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "b22ef20c-9611-41de-b3cf-fdf8f26a28ef",
+										"exec": [
+											"var passwordChangeRes = pm.response.json()",
+											"",
+											"pm.test(\"response is unauthorized\", function () {",
+											"    pm.response.to.have.status(401);",
+											"    pm.response.to.be.json",
+											"});",
+											"",
+											"pm.test(\"response has error and error message\", function () {",
+											"    pm.expect(passwordChangeRes.error).to.be.true;",
+											"    pm.expect(passwordChangeRes.message).to.equal('Missing authorization header')",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "{{authorization-t}}",
+										"disabled": true
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"oldPassword\": \"123456\",\n    \"newPassword\": \"1234567\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{apiUrl}}/users/",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"users",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "Change Name",
+					"item": [
+						{
+							"name": "Change Name - Success",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "26dbc0d3-075b-4ebb-b262-54e9f8a113ef",
+										"exec": [
+											"var changeNameRes = pm.response.json()",
+											"pm.test(\"response is ok\", function () {",
+											"    pm.response.to.have.status(200);",
+											"    pm.response.to.be.json",
+											"});",
+											"",
+											"pm.test(\"response message\", function () {",
+											"    pm.expect(changeNameRes.message).to.equal('Name changed successfully!');",
+											"",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{authorization-t}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"newName\": \"The test\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{apiUrl}}/users/changeName",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"users",
+										"changeName"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Change Name - Missing fields",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "1278e7a6-41f3-4bc4-be5f-02ba1ad862fb",
+										"exec": [
+											"var changeNameRes = pm.response.json()",
+											"",
+											"pm.test(\"response is not ok\", function () {",
+											"    pm.response.to.have.status(400);",
+											"    pm.response.to.be.json",
+											"});",
+											"",
+											"pm.test(\"response has error and error message\", function () {",
+											"    pm.expect(changeNameRes.error).to.be.true;",
+											"    pm.expect(changeNameRes.message).to.equal('Missing fields')",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "{{authorization-t}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{apiUrl}}/users/changeName",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"users",
+										"changeName"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Change Name - Missing Token",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "c003d4d9-a3c6-4800-9f4e-8bc035b1911f",
+										"exec": [
+											"var changeNameRes = pm.response.json()",
+											"",
+											"pm.test(\"response is unauthorized\", function () {",
+											"    pm.response.to.have.status(401);",
+											"    pm.response.to.be.json",
+											"});",
+											"",
+											"pm.test(\"response has error and error message\", function () {",
+											"    pm.expect(changeNameRes.error).to.be.true;",
+											"    pm.expect(changeNameRes.message).to.equal('Missing authorization header')",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "{{authorization-t}}",
+										"disabled": true
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"newName\": \"The test\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{apiUrl}}/users/changeName",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"users",
+										"changeName"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "Change Profile Pic",
+					"item": [
+						{
+							"name": "Change Profile Pic - Success",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "c17b3770-e2d9-4498-8773-b6b9b4be8dd3",
+										"exec": [
+											"var changeNameRes = pm.response.json()",
+											"pm.test(\"response is ok\", function () {",
+											"    pm.response.to.have.status(200);",
+											"    pm.response.to.be.json",
+											"});",
+											"",
+											"pm.test(\"response message\", function () {",
+											"    pm.expect(changeNameRes.message).to.equal('Profile Pic successfully changed');",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{authorization-t}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "extension",
+											"value": ".jpeg",
+											"type": "text"
+										},
+										{
+											"key": "file",
+											"type": "file",
+											"src": "/Users/duran/Desktop/brack.jpeg"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{apiUrl}}/users/profile-pic",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"users",
+										"profile-pic"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Change Profile Pic - Missing Token",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "ff1e0f0d-9236-4660-880d-ce774854b89c",
+										"exec": [
+											"var changeNameRes = pm.response.json()",
+											"",
+											"pm.test(\"response is unauthorized\", function () {",
+											"    pm.response.to.have.status(401);",
+											"    pm.response.to.be.json",
+											"});",
+											"",
+											"pm.test(\"response has error and error message\", function () {",
+											"    pm.expect(changeNameRes.error).to.be.true;",
+											"    pm.expect(changeNameRes.message).to.equal('Missing authorization header')",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "{{authorization-t}}",
+										"disabled": true
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "extension",
+											"value": ".jpeg",
+											"type": "text"
+										},
+										{
+											"key": "file",
+											"type": "file",
+											"src": "/Users/duran/Desktop/brack.jpeg"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{apiUrl}}/users/profile-pic",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"users",
+										"profile-pic"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Change Profile Pic - Missing fields",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "250570fd-57a8-4f34-9d7c-73600bd0a717",
+										"exec": [
+											"var changeNameRes = pm.response.json()",
+											"",
+											"pm.test(\"response is not ok\", function () {",
+											"    pm.response.to.have.status(400);",
+											"    pm.response.to.be.json",
+											"});",
+											"",
+											"pm.test(\"response has error and error message\", function () {",
+											"    pm.expect(changeNameRes.error).to.be.true;",
+											"    pm.expect(changeNameRes.message).to.equal('Missing required fields')",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "{{authorization-t}}"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "extension",
+											"value": ".jpeg",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "file",
+											"type": "file",
+											"src": "/Users/duran/Desktop/brack.jpeg",
+											"disabled": true
+										}
+									]
+								},
+								"url": {
+									"raw": "{{apiUrl}}/users/profile-pic",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"users",
+										"profile-pic"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "Delete User",
+					"item": [
+						{
+							"name": "Delete User - Success",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "87c1e238-e9e8-4cf2-8057-c65e6fe083e3",
+										"exec": [
+											"var changeNameRes = pm.response.json()",
+											"pm.test(\"response is ok\", function () {",
+											"    pm.response.to.have.status(200);",
+											"    pm.response.to.be.json",
+											"});",
+											"",
+											"pm.test(\"response message\", function () {",
+											"    pm.expect(changeNameRes).to.equal('Deleted');",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{authorization}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{apiUrl}}/users/",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"users",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete User - Missing token",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "38edeaef-80c7-40a3-a35b-31930a930f68",
+										"exec": [
+											"var changeNameRes = pm.response.json()",
+											"",
+											"pm.test(\"response is unauthorized\", function () {",
+											"    pm.response.to.have.status(401);",
+											"    pm.response.to.be.json",
+											"});",
+											"",
+											"pm.test(\"response has error and error message\", function () {",
+											"    pm.expect(changeNameRes.error).to.be.true;",
+											"    pm.expect(changeNameRes.message).to.equal('Missing authorization header')",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{authorization}}",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "{{apiUrl}}/users/",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"users",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Files - Directories",
+			"item": [
+				{
+					"name": "Create File",
+					"item": [
+						{
+							"name": "CreateFile - Success",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "90b66139-f24c-4011-a9be-160d569c2264",
+										"exec": [
+											"var filesData = pm.response.json();\r",
+											"\r",
+											"pm.test(\"response is ok\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"    pm.response.to.be.json\r",
+											"});\r",
+											"\r",
+											"pm.test(\"response file schema and message\", function () {\r",
+											"    if(filesData.size>0) {\r",
+											"        pm.expect(filesData.results[0]).to.have.keys(\"_id\", \"owner\", \"fileName\", \"storageId\", \"status\", \"requiresVerification\", \"verificationStatus\", \"isDirectory\", \"path\", \"sharedWith\", \"comments\").and.be.an(\"object\");\r",
+											"    }\r",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {}
+							},
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{authorization}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "extension",
+											"value": ".jpg",
+											"type": "text"
+										},
+										{
+											"key": "needsVerification",
+											"value": "false",
+											"type": "text"
+										},
+										{
+											"key": "sharedWith",
+											"value": "[]",
+											"type": "text"
+										},
+										{
+											"key": "path",
+											"value": "/",
+											"type": "text"
+										},
+										{
+											"key": "file",
+											"type": "file",
+											"src": "/C:/Users/Anahi/Desktop/blu.jpg"
+										}
+									],
+									"options": {
+										"formdata": {}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/files",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"files"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "CreateFile - File already exists",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "55ecbf47-8533-4000-9403-3b83e6be0e18",
+										"exec": [
+											"var filesData = pm.response.json();\r",
+											"\r",
+											"pm.test(\"response is ok\", function () {\r",
+											"    pm.response.to.have.status(409);\r",
+											"    pm.response.to.be.json\r",
+											"});\r",
+											"\r",
+											"pm.test(\"response file schema and message\", function () {\r",
+											"    if(filesData.size>0) {\r",
+											"       pm.expect(passwordChangeRes.error).to.be.true;\r",
+											"    pm.expect(passwordChangeRes.message).to.equal('Trying to create file that already exists.')\r",
+											"    }\r",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {}
+							},
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "{{authorization}}"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "extension",
+											"value": ".jpg",
+											"type": "text"
+										},
+										{
+											"key": "needsVerification",
+											"value": "false",
+											"type": "text"
+										},
+										{
+											"key": "sharedWith",
+											"value": "[]",
+											"type": "text"
+										},
+										{
+											"key": "path",
+											"value": "/",
+											"type": "text"
+										},
+										{
+											"key": "file",
+											"type": "file",
+											"src": "/C:/Users/Anahi/Desktop/blu.jpg"
+										}
+									],
+									"options": {
+										"formdata": {}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/files",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"files"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"description": "Testing adding a new file",
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "Get Files",
+					"item": [
+						{
+							"name": "GetFiles - All",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "7c7f62f3-dd11-4d20-8d8b-3a1b3b8aeb0d",
+										"exec": [
+											"var filesData = pm.response.json();\r",
+											"\r",
+											"pm.test(\"response is ok\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"    pm.response.to.be.json\r",
+											"});\r",
+											"\r",
+											"pm.test(\"response file schema and message\", function () {\r",
+											"    if(filesData.size>0) {\r",
+											"        pm.expect(filesData.results[0]).to.have.keys(\"_id\", \"owner\", \"fileName\", \"storageId\", \"status\", \"requiresVerification\", \"verificationStatus\", \"isDirectory\", \"path\", \"sharedWith\", \"comments\").and.be.an(\"object\");\r",
+											"    }\r",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{authorization-t}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{apiUrl}}/files/",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"files",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GetFiles -  From directory",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "496310c1-ce53-40f0-b5e0-2c7c99edf83d",
+										"exec": [
+											"var filesData = pm.response.json();\r",
+											"\r",
+											"pm.test(\"response is ok\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"    pm.response.to.be.json\r",
+											"});\r",
+											"\r",
+											"\r",
+											"pm.test(\"response file schema and message\", function () {\r",
+											"    if(filesData.size>0) {\r",
+											"        pm.expect(filesData.results[0]).to.have.keys(\"_id\", \"owner\", \"fileName\", \"storageId\", \"status\", \"requiresVerification\", \"verificationStatus\", \"isDirectory\", \"path\", \"sharedWith\", \"comments\").and.be.an(\"object\");\r",
+											"    }\r",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{authorization-t}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{apiUrl}}/files?path=/gentle_silver_dingo",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"files"
+									],
+									"query": [
+										{
+											"key": "path",
+											"value": "/gentle_silver_dingo"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GetFiles - Empty directory",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "391b4bdc-0c5a-4c9f-b7e1-c8f0c0897c6e",
+										"exec": [
+											"var filesData = pm.response.json();\r",
+											"\r",
+											"pm.test(\"response is ok\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"    pm.response.to.be.json\r",
+											"});\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{authorization-t}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{apiUrl}}/files?path=/hola",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"files"
+									],
+									"query": [
+										{
+											"key": "path",
+											"value": "/hola"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "Delete File",
+					"item": [
+						{
+							"name": "Delete File",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "070e84f5-8ee8-4a11-9111-7059b40ebdcc",
+										"exec": [
+											"var delFileData = pm.response.json();\r",
+											"\r",
+											"pm.test(\"response is ok\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"    pm.response.to.be.json\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{authorization-t}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{apiUrl}}/files/deleteFile/5fc54f22a5ecc1001782bcab",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"files",
+										"deleteFile",
+										"5fc54f22a5ecc1001782bcab"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "Get Directory",
+					"item": [
+						{
+							"name": "Get Directory - Success",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "9bb7bd3e-aba4-4ece-baad-00b3951becd7",
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"    \r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response has to be json\", function () {\r",
+											"    pm.response.to.be.json    \r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{authorization}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{apiUrl}}/files/existDirectory?path=test",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"files",
+										"existDirectory"
+									],
+									"query": [
+										{
+											"key": "path",
+											"value": "test"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Directory - Missing token",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "29db5c18-f88a-4cdb-b414-7cf126c7c6f8",
+										"exec": [
+											"pm.test(\"Status code is 401, missing authorization header\", function () {\r",
+											"    pm.response.to.have.status(401);\r",
+											"    \r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response has to be json\", function () {\r",
+											"    pm.response.to.be.json    \r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "",
+										"type": "text",
+										"value": "",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "{{apiUrl}}/files/existDirectory?path=test",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"files",
+										"existDirectory"
+									],
+									"query": [
+										{
+											"key": "path",
+											"value": "test"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Directory - Failed",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "3c6ef019-37af-4c2d-b4d8-f765630490d2",
+										"exec": [
+											"pm.test(\"Status code is 404\", function () {\r",
+											"    pm.response.to.have.status(404);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response has to be json\", function () {\r",
+											"    pm.response.to.be.json    \r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "{{authorization}}",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "{{apiUrl}}/files/existDirectory?path=test4",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"files",
+										"existDirectory"
+									],
+									"query": [
+										{
+											"key": "path",
+											"value": "test4"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "Create Directory",
+					"item": [
+						{
+							"name": "Create Directory - Success",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "137aa42f-7b8f-4fc6-b772-2b6b36207f10",
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"\r",
+											"pm.test(\"Response has to be json\", function () {\r",
+											"    pm.response.to.be.json    \r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{authorization}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"path\": \"\",\r\n    \"dirName\" : \"{{$randomCity}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{apiUrl}}/files/directory",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"files",
+										"directory"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Directory - Missing token",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "fc86e7af-0db2-4b78-aee2-a72cebb92ed2",
+										"exec": [
+											"pm.test(\"Status code is 401, missing authorization header\", function () {\r",
+											"    pm.response.to.have.status(401);\r",
+											"});\r",
+											"\r",
+											"\r",
+											"pm.test(\"Response has to be json\", function () {\r",
+											"    pm.response.to.be.json    \r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "{{authorization}}",
+										"disabled": true
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"path\": \"\",\r\n    \"dirName\" : \"{{$randomCity}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{apiUrl}}/files/directory",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"files",
+										"directory"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Directory - Failed",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "a7cb44ed-21a1-46fd-b605-0d381ac7a948",
+										"exec": [
+											"pm.test(\"Status code is 409, Path does not exist\", function () {\r",
+											"    pm.response.to.have.status(409);\r",
+											"});\r",
+											"\r",
+											"\r",
+											"pm.test(\"Response has to be json\", function () {\r",
+											"    pm.response.to.be.json    \r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "{{authorization}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"path\": \"root\",\r\n    \"dirName\" : \"{{$randomCity}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{apiUrl}}/files/directory",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"files",
+										"directory"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Notifications",
+			"item": [
+				{
+					"name": "Get Notifications",
+					"item": [
+						{
+							"name": "Get Notifications - Missing Token",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "e3eede30-c779-469f-8c3a-086f5b37e5ec",
+										"exec": [
+											"var changeNameRes = pm.response.json()",
+											"",
+											"pm.test(\"response is unauthorized\", function () {",
+											"    pm.response.to.have.status(401);",
+											"    pm.response.to.be.json",
+											"});",
+											"",
+											"pm.test(\"response has error and error message\", function () {",
+											"    pm.expect(changeNameRes.error).to.be.true;",
+											"    pm.expect(changeNameRes.message).to.equal('Missing authorization header')",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{apiUrl}}/users/notifications",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"users",
+										"notifications"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Notifications - Success",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "25b12ad8-708e-48dc-adc7-c33c02713946",
+										"exec": [
+											"var notificationsData = pm.response.json();",
+											"",
+											"",
+											"",
+											"pm.test(\"response is ok\", function () {",
+											"    pm.response.to.have.status(200);",
+											"    pm.response.to.be.json",
+											"});",
+											"",
+											"pm.test(\"response user schema and message\", function () {",
+											"    pm.expect(notificationsData).to.be.an('array');",
+											"    if(notificationsData.length>0) {",
+											"        pm.expect(notificationsData[0]).to.have.keys(\"_id\", \"fileId\", \"message\", \"emitterEmail\", \"emitterUserId\", \"fileName\", \"date\").and.be.an(\"object\");",
+											"    }",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{authorization}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{apiUrl}}/users/notifications",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"users",
+										"notifications"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "Delete Notification",
+					"item": [
+						{
+							"name": "Delete Notification - Missing Token",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "a7f07c65-1105-403c-9a26-55df44607bb3",
+										"exec": [
+											"var changeNameRes = pm.response.json()",
+											"",
+											"pm.test(\"response is unauthorized\", function () {",
+											"    pm.response.to.have.status(401);",
+											"    pm.response.to.be.json",
+											"});",
+											"",
+											"pm.test(\"response has error and error message\", function () {",
+											"    pm.expect(changeNameRes.error).to.be.true;",
+											"    pm.expect(changeNameRes.message).to.equal('Missing authorization header')",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{apiUrl}}/users/notifications/123456",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"users",
+										"notifications",
+										"123456"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Notification - Could not find that notification",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "6d8d192d-1c0e-43eb-b4be-fc0794391155",
+										"exec": [
+											"var changeNameRes = pm.response.json()",
+											"",
+											"pm.test(\"response is unauthorized\", function () {",
+											"    pm.response.to.have.status(404);",
+											"    pm.response.to.be.json",
+											"});",
+											"",
+											"pm.test(\"response has error and error message\", function () {",
+											"    pm.expect(changeNameRes.error).to.be.true;",
+											"    pm.expect(changeNameRes.message).to.equal('Notification not found')",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{authorization}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{apiUrl}}/users/notifications/123456",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"users",
+										"notifications",
+										"123456"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Notification - Success",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "2c2978a8-b408-4228-891b-dd3c505da482",
+										"exec": [
+											"var changeNameRes = pm.response.json()",
+											"",
+											"pm.test(\"response is ok\", function () {",
+											"    pm.response.to.have.status(200);",
+											"    pm.response.to.be.json",
+											"});",
+											"",
+											"pm.test(\"response has message and notificationId\", function () {",
+											"    pm.expect(changeNameRes.message).to.equal('Notification Successfully deleted');",
+											"    pm.expect(changeNameRes.notificationId).to.be.a('string');",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "{{authorization}}"
+									}
+								],
+								"url": {
+									"raw": "{{apiUrl}}/users/notifications/5fc3e3d71e97255ec2a7ca30",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"users",
+										"notifications",
+										"5fc3e3d71e97255ec2a7ca30"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "Delete All Notifications",
+					"item": [
+						{
+							"name": "Delete All Notifications - Missing Token",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "4c63aafd-91ec-40bd-a7d4-41a509a0d7f0",
+										"exec": [
+											"var changeNameRes = pm.response.json()",
+											"",
+											"pm.test(\"response is unauthorized\", function () {",
+											"    pm.response.to.have.status(401);",
+											"    pm.response.to.be.json",
+											"});",
+											"",
+											"pm.test(\"response has error and error message\", function () {",
+											"    pm.expect(changeNameRes.error).to.be.true;",
+											"    pm.expect(changeNameRes.message).to.equal('Missing authorization header')",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{apiUrl}}/users/notifications/",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"users",
+										"notifications",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Notifications - Success",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "75a3311a-5990-46d5-9722-8d112379045e",
+										"exec": [
+											"var changeNameRes = pm.response.json()",
+											"",
+											"pm.test(\"response is ok\", function () {",
+											"    pm.response.to.have.status(200);",
+											"    pm.response.to.be.json",
+											"});",
+											"",
+											"pm.test(\"response has message and notificationId\", function () {",
+											"    pm.expect(changeNameRes.message).to.equal('Notifications cleared successfully');",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "{{authorization}}"
+									}
+								],
+								"url": {
+									"raw": "{{apiUrl}}/users/notifications",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"users",
+										"notifications"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"protocolProfileBehavior": {}
+}

@@ -7,16 +7,20 @@ const createFile = async (req, res) => {
     let { path, fileName, extension, needsVerification, sharedWith, storageName } = req.body;
 
     let owner = { id: req._user._id, email: req._user.email };
-    sharedWith = JSON.parse(sharedWith).map(user => {
-        return { userId: user.id, email: user.email, permission: user.permission }
-    });
-    if (!path) path = '/';
 
-    if (!fileName || !owner || !extension || !needsVerification || !storageName) return res.status(400).json({ error: true, message: "Missing required fields" });
+    console.log(req.body);
 
-
+    console.log("MMMM")
+    
+    
     try {
-
+        sharedWith = JSON.parse(sharedWith).map(user => {
+            return { userId: user.id, email: user.email, permission: user.permission }
+        });
+        if (!path) path = '/';
+    
+        if (!fileName || !owner || !extension || !needsVerification || !storageName) return res.status(400).json({ error: true, message: "Missing required fields" });
+        
         if (path != '/') {
             let splitIndex = path.lastIndexOf('/');
             let prevPath = path.substring(0, splitIndex);
